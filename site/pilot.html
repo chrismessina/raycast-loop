@@ -1,0 +1,136 @@
+<title>Raycast PR Pilot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: one reading column; wide tables scroll inside their own frames. */
+:root {
+  --bg: #f6f6f3; --surface: #ffffff; --fg: #1d1f24; --muted: #5f6470; --rule: #dcdcd6;
+  --accent: #c8352b; --merged: #2f7d4f; --stale: #c8352b; --author: #8a6d1f; --maint: #4b5a8c;
+  --display: "Fraunces", Georgia, serif; --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --surface: #1d2026; --fg: #e8e8e4; --muted: #a0a5b0; --rule: #33373f;
+  --accent: #ff6b5e; --merged: #5fc48a; --stale: #ff6b5e; --author: #e0bd5a; --maint: #9aa8e0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15171b; --surface: #1d2026; --fg: #e8e8e4; --muted: #a0a5b0; --rule: #33373f;
+  --accent: #ff6b5e; --merged: #5fc48a; --stale: #ff6b5e; --author: #e0bd5a; --maint: #9aa8e0; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body); }
+main { max-width: 980px; margin: 0 auto; padding-block: 40px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px; }
+section { display: grid; gap: 14px; min-width: 0; }
+h1 { font: 600 clamp(28px, 5vw, 40px)/1.1 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--display); margin: 0; text-wrap: balance; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dim { color: var(--muted); }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font: 13px var(--mono); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule); }
+.facts div { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.facts b { font: 600 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.facts span { color: var(--muted); font-size: 13px; }
+.scroll { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { font: 500 12px var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+table.grid td { text-align: right; white-space: nowrap; }
+table.grid tbody th { font-weight: 400; }
+tr:last-child td, tr:last-child th { border-bottom: 0; }
+.chip { display: inline-block; font: 500 12px var(--mono); padding: 1px 8px; border-radius: 3px; white-space: nowrap;
+  border: 1px solid currentColor; }
+.c-merged { color: var(--merged); } .c-stale-bot { color: var(--stale); } .c-author { color: var(--author); }
+.c-maintainer { color: var(--maint); } .c-open, .c-unknown { color: var(--muted); }
+ol.decide { margin: 0; padding-left: 22px; display: grid; gap: 14px; max-width: 72ch; }
+ol.decide b { display: block; }
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; max-width: 72ch; }
+</style>
+<main>
+<header style="display:grid;gap:10px">
+  <span class="eyebrow">raycast/extensions · pilot · PRs created 2025-01-01 to 2025-03-31</span>
+  <h1>What the first Greptile quarter looks like</h1>
+  <p class="dim">Collected 2026-10-19 through GitHub GraphQL. 1,302 PRs, which matches the
+  validation target for Jan–Mar 2025 (374 + 413 + 515) exactly. Bot-authored PRs are excluded below, leaving 1,291.
+  The point of this page is to check the definitions against real PRs before collecting 2024–2026.</p>
+</header>
+
+<section>
+  <div class="facts">
+    <div><b>529</b><span>new-extension PRs</span></div>
+    <div><b>721</b><span>PRs to existing extensions</span></div>
+    <div><b>164</b><span>auto-closed by the stale bot</span></div>
+    <div><b>149</b><span>of those had feedback first</span></div>
+    <div><b>84</b><span>of those, the author had replied at least once</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Decisions before the full run</h2>
+  <ol class="decide">
+    <li><b>Count resubmissions as one submission.</b> 76 of 166 new-extension PRs "closed by author" were
+    reopened as a fresh PR for the same folder, most within minutes. Counting them as dropout inflates question 6.
+    Proposal: group by author + folder and score the chain by its last PR.</li>
+    <li><b>Tighten the duplicate heuristic.</b> The reviewer-link signal (82 PRs) mostly finds real duplicates.
+    The folder-name match (149 PRs) fires on generic lead words like <code>time</code>, <code>text</code> and
+    <code>project</code>. Proposal: only match on a lead word that is rare across folders, then hand-check 30.</li>
+    <li><b>Decide whether extension owners count as feedback.</b> Today feedback means Greptile or a Raycast maintainer.
+    Extension owners (association CONTRIBUTOR) also file "changes requested" reviews on PRs to their extension; they're
+    tracked in a separate column for now.</li>
+    <li><b>Measure Greptile before and after, not with and without.</b> Inside Feb–Mar the PRs Greptile skipped are mostly
+    the ones opened before it was switched on, so the comparison below is confounded. The full run gives a clean
+    2024 baseline.</li>
+    <li><b>Tag each PR with the stale clock in force.</b> 37 of the 164 auto-closes here ran on the
+    21 + 14 day clock (Feb 25 – Mar 26, 2025); the rest on 14 + 7. The clock changed six times in the window.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>By month</h2>
+  <p class="dim">Greptile's first review was on #16482, opened Jan 19. Coverage went from 1% in January to 92% in March.
+  "Feedback" is a Greptile review or a maintainer comment or non-approval review before the PR closed.</p>
+  <div class="scroll"><table class="grid"><thead><tr><th></th><th>2025-01</th><th>2025-02</th><th>2025-03</th></tr></thead><tbody><tr><th scope='row'>PRs (humans)</th><td>374</td><td>402</td><td>515</td></tr><tr><th scope='row'>Greptile coverage</th><td>0.8%</td><td>35.6%</td><td>92.0%</td></tr><tr><th scope='row'>New: PRs</th><td>142</td><td>164</td><td>223</td></tr><tr><th scope='row'>New: merged</th><td>31.7%</td><td>36.6%</td><td>34.5%</td></tr><tr><th scope='row'>New: auto-closed</th><td>25.4%</td><td>25.6%</td><td>26.5%</td></tr><tr><th scope='row'>New: median days to merge</th><td>8.8</td><td>11.8</td><td>7.4</td></tr><tr><th scope='row'>New: p75 days to merge</th><td>13.5</td><td>17.8</td><td>13.5</td></tr><tr><th scope='row'>New: median days to first maintainer reply</th><td>7.1</td><td>10.1</td><td>5.0</td></tr><tr><th scope='row'>Existing: PRs</th><td>228</td><td>220</td><td>273</td></tr><tr><th scope='row'>Existing: merged</th><td>91.7%</td><td>86.8%</td><td>83.2%</td></tr><tr><th scope='row'>Existing: auto-closed</th><td>3.1%</td><td>2.7%</td><td>4.8%</td></tr><tr><th scope='row'>Existing: median days to merge</th><td>1.3</td><td>3.8</td><td>1.5</td></tr><tr><th scope='row'>Existing: p75 days to merge</th><td>4.0</td><td>8.9</td><td>5.7</td></tr><tr><th scope='row'>Existing: median days to first maintainer reply</th><td>0.7</td><td>1.9</td><td>0.9</td></tr><tr><th scope='row'>PRs that got feedback</th><td>152</td><td>211</td><td>467</td></tr><tr><th scope='row'>Auto-closed after feedback</th><td>41</td><td>44</td><td>64</td></tr><tr><th scope='row'>Feedback, then closed unmerged</th><td>46.1%</td><td>39.8%</td><td>34.3%</td></tr><tr><th scope='row'>Feedback, then no author activity before close</th><td>20.4%</td><td>16.1%</td><td>9.0%</td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>How PRs end</h2>
+  <p class="dim">Only about a third of new-extension PRs merge. Existing-extension PRs merge almost nine times out of ten.</p>
+  <div class="scroll"><table class="grid"><thead><tr><th></th><th>PRs</th><th>Merged</th><th>Auto-closed</th>
+  <th>Closed by author</th><th>Closed by maintainer</th></tr></thead><tbody><tr><th scope='row'>New extension</th><td>529</td><td>182 <span class='dim'>(34%)</span></td><td>137 <span class='dim'>(26%)</span></td><td>166 <span class='dim'>(31%)</span></td><td>43 <span class='dim'>(8%)</span></td></tr><tr><th scope='row'>Existing extension</th><td>721</td><td>627 <span class='dim'>(87%)</span></td><td>26 <span class='dim'>(4%)</span></td><td>59 <span class='dim'>(8%)</span></td><td>9 <span class='dim'>(1%)</span></td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Greptile vs. not, Feb–Mar (confounded)</h2>
+  <div class="scroll"><table class="grid"><thead><tr><th></th><th>PRs</th><th>Merged</th><th>Auto-closed</th></tr></thead>
+  <tbody><tr><th scope='row'>New, reviewed by Greptile</th><td>262</td><td>42%</td><td>26%</td></tr><tr><th scope='row'>New, not reviewed by Greptile</th><td>125</td><td>21%</td><td>27%</td></tr><tr><th scope='row'>Existing, reviewed by Greptile</th><td>335</td><td>86%</td><td>4%</td></tr><tr><th scope='row'>Existing, not reviewed by Greptile</th><td>158</td><td>83%</td><td>3%</td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Spot-check: auto-closed</h2>
+  <p class="dim">Random 10 of 164. Auto-closed means closed unmerged by raycastbot with the stalled label or the
+  inactivity message. raycastbot also closes every merged PR, so the closer alone isn't enough.</p>
+  <div class="scroll"><table class="list"><thead><tr><th>PR</th><th>Title</th><th>Type</th><th>Feedback</th><th>Author replied after it</th><th>Clock</th></tr></thead><tbody><tr><td><a href="https://github.com/raycast/extensions/pull/16262">#16262</a></td><td>Update raycast-sink extension</td><td>existing</td><td>maintainer</td><td>yes</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16480">#16480</a></td><td>Add generate-beautiful-qr extension</td><td>new</td><td>maintainer</td><td>yes</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16542">#16542</a></td><td>Add cpp-docs extension</td><td>new</td><td>maintainer</td><td>no</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16582">#16582</a></td><td>Add x509-certificate-viewer extension</td><td>new</td><td>maintainer</td><td>yes</td><td>21+14</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16678">#16678</a></td><td>Add dock-tools extension</td><td>new</td><td>maintainer</td><td>no</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16902">#16902</a></td><td>Add ask-ai-quick extension</td><td>new</td><td>maintainer</td><td>no</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17017">#17017</a></td><td>Add file-cutter extension</td><td>new</td><td>maintainer</td><td>no</td><td>21+14</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17097">#17097</a></td><td>Add ao-raycast extension</td><td>new</td><td>maintainer</td><td>yes</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17980">#17980</a></td><td>Add watze-jwt-parser extension</td><td>new</td><td>none</td><td>no</td><td>14+7</td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18279">#18279</a></td><td>Add nova-act extension</td><td>new</td><td>both</td><td>no</td><td>14+7</td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Spot-check: duplicates, reviewer signal</h2>
+  <p class="dim">Random 15 of 82 new-extension PRs where a maintainer or Greptile linked a store extension or said
+  one exists. 41 of them also match the folder-name heuristic.</p>
+  <div class="scroll"><table class="list"><thead><tr><th>PR</th><th>New folder</th><th>What the reviewer linked or said</th><th>Outcome</th></tr></thead><tbody><tr><td><a href="https://github.com/raycast/extensions/pull/16323">#16323</a></td><td><code>unifi-network</code></td><td><code>www.raycast.com/tonka3000/unifi</code></td><td><span class="chip c-maintainer">closed by maintainer</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16329">#16329</a></td><td><code>hugging-face-ai</code></td><td><code>www.raycast.com/ragnor/huggingcast</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16537">#16537</a></td><td><code>tailwind-palette-generator</code></td><td><code>www.raycast.com/vimtor/tailwindcss</code></td><td><span class="chip c-maintainer">closed by maintainer</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16853">#16853</a></td><td><code>folder-icon-crafter</code></td><td><code>www.raycast.com/phlo/custom-folder</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16935">#16935</a></td><td><code>crickets</code></td><td><code>www.raycast.com/pernielsentikaer/soundboard</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16952">#16952</a></td><td><code>salesforce-navigator</code></td><td><code>www.raycast.com/sven/salesforce</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17030">#17030</a></td><td><code>quoterism</code></td><td><code>www.raycast.com/pernielsentikaer/dad-jokes</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17609">#17609</a></td><td><code>contexts</code></td><td><code>already exists</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17611">#17611</a></td><td><code>plainstyle</code></td><td><code>www.raycast.com/peduarte/fancy-text</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17638">#17638</a></td><td><code>google-contacts</code></td><td><code>www.raycast.com/raycast/google-contacts</code></td><td><span class="chip c-maintainer">closed by maintainer</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17705">#17705</a></td><td><code>finder-file-actions</code></td><td><code>www.raycast.com/Mehdi_Hp/copymoveto</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17824">#17824</a></td><td><code>windsurf-projects</code></td><td><code>www.raycast.com/thomas/visual-studio-code</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17952">#17952</a></td><td><code>hearthstone</code></td><td><code>www.raycast.com/sergigp/hsdecks</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18065">#18065</a></td><td><code>surge-outbound-switcher</code></td><td><code>www.raycast.com/ysj151215/raycast-surge</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18231">#18231</a></td><td><code>tinyimg</code></td><td><code>www.raycast.com/HelloImSteven/sips</code></td><td><span class="chip c-merged">merged</span></td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Spot-check: duplicates, folder-name only</h2>
+  <p class="dim">Random 15 of the PRs only the heuristic caught. Expect noise; this is the upper bound.</p>
+  <div class="scroll"><table class="list"><thead><tr><th>PR</th><th>New folder</th><th>Existing folders it matched</th><th>Outcome</th></tr></thead><tbody><tr><td><a href="https://github.com/raycast/extensions/pull/16108">#16108</a></td><td><code>translate-send-webpage-to-reader</code></td><td><code>google-translate</code> <code>papago-translate</code> <code>parrot-translate</code> <code>raycast-translate-ge</code> <code>youdao-translate</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16288">#16288</a></td><td><code>empty-downloads-folder</code></td><td><code>empty-screenshots</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16306">#16306</a></td><td><code>custom-wordle</code></td><td><code>custom-folder</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16330">#16330</a></td><td><code>project-manager</code></td><td><code>noun-project</code> <code>project-companion</code> <code>quick-open-project</code> <code>visual-studio-code-project-manager</code> <code>zeplin-project-search</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16666">#16666</a></td><td><code>nba-viewer</code></td><td><code>nba-game-viewer</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16669">#16669</a></td><td><code>quick-access-for-zeroheight</code></td><td><code>quick-access</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16838">#16838</a></td><td><code>open-with-hipixel</code></td><td><code>open-with-app</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16953">#16953</a></td><td><code>translator</code></td><td><code>ipa-translator</code> <code>openai-translator</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17207">#17207</a></td><td><code>git-assistant</code></td><td><code>ai-git-assistant</code> <code>git-branch-name-generator</code> <code>git-buddy</code> <code>git-co-authors</code> <code>git-commands</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17275">#17275</a></td><td><code>image-diff-checker</code></td><td><code>image-base64</code> <code>image-host</code> <code>image-wallet</code> <code>markdown-image-to-html</code> <code>photoroom-image-editing</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17356">#17356</a></td><td><code>dev-ops</code></td><td><code>dev-to</code></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17708">#17708</a></td><td><code>d-day-tracker</code></td><td><code>day-one</code></td><td><span class="chip c-maintainer">closed by maintainer</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17910">#17910</a></td><td><code>pkg-swap</code></td><td><code>r-pkg-search</code></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18113">#18113</a></td><td><code>uk-phone---area-code</code></td><td><code>uk-bank-holidays</code></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18247">#18247</a></td><td><code>prompt-chain-manager</code></td><td><code>chatgpt3-prompt</code> <code>prompt-stash</code></td><td><span class="chip c-author">closed by author</span></td></tr></tbody></table></div>
+</section>
+
+<section>
+  <h2>Spot-check: author-closed, then resubmitted</h2>
+  <p class="dim">Random 10 of 76.</p>
+  <div class="scroll"><table class="list"><thead><tr><th>Closed PR</th><th>Folder</th><th>Resubmitted as</th><th>Final outcome</th></tr></thead><tbody><tr><td><a href="https://github.com/raycast/extensions/pull/16177">#16177</a></td><td><code>ipinfo</code></td><td><a href="https://github.com/raycast/extensions/pull/16199">#16199</a> <a href="https://github.com/raycast/extensions/pull/16200">#16200</a> <a href="https://github.com/raycast/extensions/pull/16201">#16201</a></td><td><span class="chip c-stale-bot">auto-closed</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16300">#16300</a></td><td><code>mutedeck</code></td><td><a href="https://github.com/raycast/extensions/pull/16432">#16432</a> <a href="https://github.com/raycast/extensions/pull/17135">#17135</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16448">#16448</a></td><td><code>1bookmark</code></td><td><a href="https://github.com/raycast/extensions/pull/16466">#16466</a> <a href="https://github.com/raycast/extensions/pull/16467">#16467</a> <a href="https://github.com/raycast/extensions/pull/16468">#16468</a> <a href="https://github.com/raycast/extensions/pull/16469">#16469</a> <a href="https://github.com/raycast/extensions/pull/16471">#16471</a> <a href="https://github.com/raycast/extensions/pull/16472">#16472</a> <a href="https://github.com/raycast/extensions/pull/16474">#16474</a> <a href="https://github.com/raycast/extensions/pull/16482">#16482</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/16990">#16990</a></td><td><code>expo</code></td><td><a href="https://github.com/raycast/extensions/pull/16991">#16991</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17063">#17063</a></td><td><code>nuxt-ui</code></td><td><a href="https://github.com/raycast/extensions/pull/17122">#17122</a> <a href="https://github.com/raycast/extensions/pull/17130">#17130</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17301">#17301</a></td><td><code>harmonyhub</code></td><td><a href="https://github.com/raycast/extensions/pull/17317">#17317</a></td><td><span class="chip c-author">closed by author</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17339">#17339</a></td><td><code>fullscreentext</code></td><td><a href="https://github.com/raycast/extensions/pull/17346">#17346</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17612">#17612</a></td><td><code>mermaid-to-image</code></td><td><a href="https://github.com/raycast/extensions/pull/17621">#17621</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/17804">#17804</a></td><td><code>markdown-navigator</code></td><td><a href="https://github.com/raycast/extensions/pull/17820">#17820</a></td><td><span class="chip c-merged">merged</span></td></tr><tr><td><a href="https://github.com/raycast/extensions/pull/18088">#18088</a></td><td><code>hazu</code></td><td><a href="https://github.com/raycast/extensions/pull/18124">#18124</a></td><td><span class="chip c-maintainer">closed by maintainer</span></td></tr></tbody></table></div>
+</section>
+</main>

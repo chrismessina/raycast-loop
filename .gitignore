@@ -1,0 +1,5 @@
+data/raw/
+data/logs/
+HANDOFF.md
+__pycache__/
+.DS_Store

@@ -1,0 +1,31 @@
+number,new_folder,matched,verdict,note
+17396,diskutil-mac,diskutil,same service,Both wrap diskutil; merged as a separate extension
+17671,snake-case-generator,snake,different,Text case tool vs. a game
+17868,logseq-extension-pro,logseq,same service,Second Logseq extension; auto-closed
+17910,pkg-swap,r-pkg-search,different,npm commands vs. R packages
+17979,gemini,raycast-gemini,same service,Google Gemini already in the Store
+18247,prompt-chain-manager,prompt-stash,different,Same category only
+18287,movie-quicklook,tmdb,different,Matched on the word "movie"
+18456,mistral-ai-internal,mistral,same service,Mistral already in the Store
+18582,tana-paste-for-raycast,tana,same service,Tana already in the Store
+18763,daily-sites,my-daily-log,different,Matched on the word "daily"
+19712,mcp-server-manager,mcp,same service,Closed by a maintainer
+20438,days-left,days-until-christmas,different,Matched on the word "days"
+22187,fathom,fathom-analytics,different,Fathom meetings vs. Fathom Analytics: same name; different products
+22390,micro-snitch-logs,microblog,different,Matched on "micro"
+22688,steam-account-switcher,steam,same service,New feature for an existing service
+24531,django-docs,djangopackages,different,Different sites in one ecosystem
+25040,raycast-gh-copilot-usage,gh-pic,different,Matched on "gh"
+25510,dust,dust-tt,same service,Dust already in the Store
+25981,copilot-chat,copilot-workspace,different,Different GitHub products
+26060,number-research,number-facts,different,Different sites
+26237,cider-control,cider,same service,Cider already in the Store
+27791,cron-job-manager,cron-manager,same service,Near-identical purpose
+29373,salesforce-workbench,salesforce-search,same service,Same service; different feature
+29572,sidecar-display,sidecar,same service,Merged as a separate extension anyway
+29737,aerospace-control-center,aerospace,same service,Closed by a maintainer
+29938,gif-maker,gif-search,different,Matched on "gif"
+30086,don-t-break-the-chain,idonthavespotify,different,Title-token false match
+30152,ai-status-check,status-nerd,different,Matched on "status"
+30787,dev-tools-br,dev-servers,different,Matched on "dev"
+30846,grok-bot-direct,grok-ai,same service,Grok already in the Store

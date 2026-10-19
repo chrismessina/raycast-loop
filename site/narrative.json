@@ -1,0 +1,189 @@
+{
+  "window": "Jan 2024 – Oct 2026",
+  "title": "Where new extensions get lost",
+  "lede": "PRs to the Raycast Store more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most get a human review, go through a round of fixes, get more feedback, and stop. Others sit as drafts nobody was asked to review, or wait weeks for one of the two people who review them. This report follows that loop (open a PR, get feedback, revise, get reviewed again) and shows where contributors drop out of it.",
+  "headline_numbers": [
+    [
+      "2.1×",
+      "PRs per quarter: 899 on average in 2024, 1,924 in the first three quarters of 2026"
+    ],
+    [
+      "57% → 37%",
+      "new-extension submissions merged, 2024-Q1 vs. 2026-Q1"
+    ],
+    [
+      "16% → 43%",
+      "new-extension submissions auto-closed by the stale bot, 2024-Q1 vs. 2026-Q2"
+    ],
+    [
+      "~2 in 3",
+      "auto-closed new submissions in 2026 had a human reply first; most authors had answered earlier feedback"
+    ],
+    [
+      "4.8 → 22 days",
+      "median wait from ready-for-review to first human reply on a new extension, 2024-Q1 vs. 2026-Q2"
+    ],
+    [
+      "27%",
+      "of Greptile's findings fall in mechanical categories a local script could check"
+    ]
+  ],
+  "volume": {
+    "title": "Twice the PRs, more than twice the new extensions",
+    "body": "<p>2024 was flat at about 300 PRs a month. Growth starts in late 2025 and holds through 2026: <strong>6,418 PRs in the first nine and a half months of 2026, against 3,594 in all of 2024</strong>. New-extension submissions grew fastest, from 1,021 in 2024 to 2,420 so far in 2026.</p><p>September 2026 is the busiest month in the data (889 PRs), the first full month after Raycast 2.0 launched on August 25. Volume also rose after Windows opened to extension developers in September 2025 and around the Windows public beta in November. The data shows the timing; it can't show what caused it.</p>"
+  },
+  "outcomes": {
+    "title": "PRs to existing extensions still merge. New extensions increasingly don't.",
+    "body": "<p>PRs to existing extensions merge about 80–92% of the time across the whole window. For new extensions <strong>the merge rate fell from 57% to 37%</strong>, and the share closed by the stale bot nearly tripled, from 16% to 43%.</p><p>Authors closing their own submissions held at 16–27% through 2026-Q2 (resubmissions counted once). Maintainers rejecting a submission outright stayed under 10% in every quarter. The growth is almost entirely in auto-closes.</p><p>The 2026-Q3 drop to 24% is partly the clock (25 + 7 days from June 2) and partly that September's PRs haven't had time to go stale. October is too new to read.</p>"
+  },
+  "drafts": {
+    "title": "Inside the loop: why new submissions get auto-closed",
+    "body": "<p>Auto-closed new submissions fall into three groups. In 2026, <strong>nearly two thirds had a human reply first</strong> (503 of 799: 211 of 338 in Q1, 157 of 286 in Q2, 135 of 175 in Q3). In most of those the author had answered earlier feedback (often Greptile's) and a reviewer spoke last: 143 of the 211 in Q1, 129 of 157 in Q2. Cases where the author had acted last and was waiting on a reviewer were small (9–26 a quarter in 2026).</p><p>About <strong>a quarter were never marked ready for review</strong> (22–39% of auto-closes each quarter since 2025-Q2). <code>ray publish</code> opens the Store PR as a draft, and Raycast doesn't review a PR until the author marks it ready. Through February 2025, 1–8% of PRs a month were opened as drafts; from 2025-Q2 through 2026-Q3 it's 57–68% a quarter. 17–24% of new submissions from 2025-Q2 through 2026-Q2 were never marked ready, against under 1% in 2024. The stale bot doesn't exempt drafts.</p><p>The rest were <strong>marked ready and never heard from a person</strong>: 36 in 2026-Q1 and 58 in 2026-Q2, when review was slowest. Many more PRs are drafts at close than were never ready: reviewers often convert a PR back to draft while they wait for changes.</p>"
+  },
+  "velocity": {
+    "title": "Once ready, new extensions waited three weeks in the first half of 2026",
+    "body": "<p>Existing-extension PRs got faster: median time to merge fell from 1.5 days to under one, and the first human reply comes within a day, often within hours.</p><p>New extensions, measured from when the PR was marked ready, waited a median of 4.8 days for a first human reply in 2024-Q1 and <strong>22 days in 2026-Q2</strong>, among PRs that got a reply. In that quarter <strong>66% of ready new submissions had no human reply within 21 days</strong>, the stale bot's clock until June 2. In 2026-Q3 the median fell back to 12 days and that share to 10%.</p><p>For two years the queue was one person deep: pernielsentikaer made 99% of maintainer review actions in 2024 and 95% in 2025. In 2026 a second maintainer, 0xdhrv, made 63% of them.</p>"
+  },
+  "greptile": {
+    "title": "Greptile arrived in February 2025 and has reviewed nearly everything since",
+    "body": "<p>Greptile's first review was on February 17, 2025 (#17128). Coverage was 48% of PRs opened in 2025-Q1 (it also reviewed some January PRs late), about 85% from 2025-Q2 through 2026-Q2, and 96–100% since July 2026. On new PRs since July 2026 its median time to first review is under 10 minutes.</p><p>Its mean confidence score rose from 3.3 in 2025-Q3, when it started publishing one, to about 4.4 out of 5 in mid-2026. Either PRs got cleaner or Greptile's scale moved; the data can't separate the two. Review rounds aren't charted: Greptile edits one summary in place, so pushes after the first review leave no separate record.</p>"
+  },
+  "friction": {
+    "title": "Authors answer the first round. The second one loses them.",
+    "body": "<p>The share of feedback recipients who closed unmerged without ever replying fell from about 12% in 2024 to about 4% in 2026. The share who got feedback and closed unmerged for any reason stayed in a similar range: 27–34% across 2024, 24–31% from 2025-Q2 through 2026-Q2. These describe what happened, not why; the data can't show whether Greptile changed anyone's mind.</p><p>What grew is the pattern in the section above: an author answers the first feedback, often Greptile's, and doesn't come back after the next review. With human replies taking three weeks in early 2026, each extra round costs most of the stale window.</p><p>Extension owners give less of the feedback over time (15% of submissions in 2024, 6–8% in 2026), because more of the volume is new extensions, which have no owner yet.</p>"
+  },
+  "themes": {
+    "title": "About a quarter of what Greptile flags is mechanical",
+    "body": "<p>The data holds 36,571 Greptile inline findings on 7,625 PRs. That's a floor: a few PRs with very long review threads were truncated at collection. Clustered by keyword, the biggest themes are behavior bugs specific to the extension, cleanup, CHANGELOG format and error handling.</p><p><strong>27% of findings fall in mechanical categories</strong>: CHANGELOG format, screenshots, hand-typed preferences, package.json fields, lint config, dependencies and localization. On abandoned new extensions it's 31%. Findings Greptile itself tagged as logic or P0/P1 are excluded from the mechanical set. 67% of PRs with findings got at least one mechanical finding, and 17% got only mechanical ones. This is a keyword classification, not a hand-validated one.</p><p>Each mechanical theme maps to one or more of Greptile's 32 custom rules (your export of 2026-09-26). The public Copilot rubric fully covers two of them: CHANGELOG format and localization.</p>"
+  },
+  "duplicates": {
+    "title": "A quarter of new submissions overlap something already in the Store",
+    "body": "<p>Two imperfect signals over the same submissions. <strong>Reviewer signal:</strong> a maintainer or Greptile linked an existing Store extension or said one exists (code blocks, schema URLs and generic \"already exists\" phrases excluded). That held for 15% of new submissions in 2024-Q1 and 22–31% across the first three quarters of 2026. <strong>Name signal:</strong> the new folder shares a rare lead word (naming three or fewer extensions) with an older one: about 20% in 2026. About a third of reviewer-flagged submissions also match on name.</p><p>A hand-check of 30 name matches found 14 were the same service. That's the precision of this sample, not a correction factor. Same service doesn't always mean the author should have contributed instead: <code>sidecar-display</code> and <code>diskutil-mac</code> merged as separate extensions.</p>"
+  },
+  "extensions": {
+    "title": "The most active extensions follow the agent wave",
+    "body": "<p>Model Context Protocol Registry had 157 merged PRs since January 2025 from <strong>134 different authors</strong>, mostly PRs adding MCP servers to the registry. It's the clearest example of an extension built for contributions. Skills is the opposite shape: 54 merged PRs, 40 of them from two people. Counts are merged PRs labeled for the extension, by merge month.</p><p>By contributors, the community-maintained giants lead: GitHub lists 46 accounts in the Store (owner, author and contributors, past and present) and drew 48 distinct PR authors in this window; Spotify Player 42 and 45; Visual Studio Code 32 and 27.</p>"
+  },
+  "decision": {
+    "title": "Should Raycast publish the Greptile rules?",
+    "body": "<p>Yes, as a check contributors run, with clear expectations about what it fixes. It addresses the mechanical quarter of findings, and every round it saves matters when a human reply can take three weeks. It doesn't fix the review wait or the draft step.</p>",
+    "for": [
+      "27% of findings, and 31% on abandoned new extensions, fall in mechanical categories. A local check could catch many before the first push instead of one round later.",
+      "Most reviewed auto-closes are authors who did one round and stopped after the next. Fewer rounds means fewer chances to stop.",
+      "It runs today. The deterministic rules already run locally in about 40 ms in preflight.mjs, calibrated against 35 real extensions. Greptile supports committing rules to a <a href=\"https://www.greptile.com/docs/code-review/custom-standards#method-2-greptile/-folder-recommended\"><code>.greptile/</code> folder</a>, so the review bot and contributors would read the same file. A contributor has already opened a <code>.greptile/config.json</code> PR (#32498) for the draft setting.",
+      "Coding agents follow a rules file they can read. They can't follow rules they can't see."
+    ],
+    "against": [
+      "A document alone didn't move the numbers. After the Copilot rubric was published on August 29, 2025, the CHANGELOG share of Greptile findings rose (5.5% to 12.0%, by finding date) instead of falling.",
+      "A quarter of auto-closed new extensions were never marked ready. No rules file fixes that.",
+      "Behavior bugs, security and judgment calls make up most findings. No rules file catches those.",
+      "Raycast would have to keep a public copy in sync with Greptile's config."
+    ],
+    "verdict": "<p><strong>Publish the rules as a script contributors run before pushing</strong>, next to the rubric. Expect it to cut some review rounds, not to fix dropout on its own.</p><p><strong>Then shorten the loop after a human review.</strong> The largest group of auto-closed new extensions is authors who answered earlier feedback and didn't come back after the next review. A clear checklist in the first human review, so it is the last round, matters more than any single rule.</p><p><strong>Fix the draft step.</strong> A quarter of auto-closes were never marked ready. A raycastbot comment on a quiet draft explaining that review starts when it is marked ready, or a line at the end of <code>ray publish</code> output, costs little.</p><p><strong>Watch the clock.</strong> In 2026-Q2, 66% of ready new submissions had no human reply within 21 days. Pausing the stale timer while an author is waiting on a reviewer would stop closures for inactivity that isn't theirs. The June 2026 move to 25 + 7 days was a step in that direction.</p>"
+  },
+  "method": "<p>Every PR opened on raycast/extensions from January 1, 2024 to October 18, 2026 (15,078 PRs), collected through GitHub GraphQL with timelines, reviews and comments. Monthly totals match the reference counts for January 2024 – June 2025 exactly. 12 bot-authored PRs are excluded. Connections were capped (50 reviews, 30 comments per review, 100 comments per PR), so a handful of very long threads are incomplete.</p><p><strong>Auto-closed</strong>: closed unmerged by raycastbot, with the <code>status: stalled</code> label or the inactivity message. raycastbot also closes every merged PR, so the closer alone isn't enough. 1,932 PRs. GitHub's live search finds 2,030 closed PRs with the stalled label: 1,907 of them are in that set, and 123 were closed by a person while stalled. The other 25 auto-closes lost the label afterward. <strong>Submission</strong>: new-extension PRs from the same author for the same folder are one submission, ending at its first merge and scored by its last PR; a <code>package.json</code> added to a folder that already exists is an update. <strong>Feedback</strong>: a Greptile review, or a non-approval review or comment from a Raycast maintainer (COLLABORATOR or MEMBER), the extension owner (named in raycastbot's 🔔 ping), or another contributor requesting changes, before the PR closed, across every PR in the submission. <strong>Author replied</strong>: a comment, review or force-push by the author, or a commit authored by them. <strong>Ready</strong>: replayed from draft transitions; a PR that opened ready counts from creation, one that opened as a draft from its first ready-for-review event. A submission is ever-ready if any of its PRs was. <strong>Human reply</strong>: a maintainer or owner.</p><p>Months from mid-September 2026 on are provisional: those PRs can't be stale-closed yet. The stale clock changed five times in the window (table below), so compare auto-close rates across clock changes with care. An independent review by Codex checked these definitions against the code and every number on this page against the data; two rounds of its corrections are applied.</p>",
+  "clock_table": [
+    [
+      "Jan 2024 – Feb 25, 2025",
+      "14 + 7",
+      "291"
+    ],
+    [
+      "Feb 25 – Mar 26, 2025",
+      "21 + 14",
+      "14"
+    ],
+    [
+      "Mar 26 – Dec 20, 2025",
+      "14 + 7",
+      "514"
+    ],
+    [
+      "Dec 20, 2025 – Jan 15, 2026",
+      "15 + 30",
+      "3"
+    ],
+    [
+      "Jan 15 – Jun 2, 2026",
+      "14 + 7",
+      "685"
+    ],
+    [
+      "Jun 2, 2026 – now",
+      "25 + 7",
+      "425"
+    ]
+  ],
+  "recommendations": {
+    "title": "Five changes, ordered by reach for the cost",
+    "intro": "Each is sized against 2026-H1, when 1,529 new-extension submissions were opened and 572 merged.",
+    "items": [
+      {
+        "title": "Put Greptile's rules in the repo",
+        "reach": "Every PR",
+        "cost": "Low",
+        "what": "Move Greptile's custom rules into a <code>.greptile/</code> folder in raycast/extensions, <a href=\"https://www.greptile.com/docs/code-review/custom-standards#method-2-greptile/-folder-recommended\">Greptile's recommended setup</a>: version-controlled, reviewed in PRs, readable by contributors and their agents. Ship the deterministic rules as a local check.",
+        "tradeoff": "The rules become public, so people can write to them; rule changes go through PR review, which adds process and an audit trail."
+      },
+      {
+        "title": "Make the draft step impossible to miss",
+        "reach": "1 in 6 new submissions",
+        "cost": "Low",
+        "what": "267 of 1,529 were never marked ready. Have raycastbot comment on a quiet draft that review starts when it's marked ready, print the same in <code>ray publish</code> output, and stop automatic Greptile reviews on drafts (<a href=\"https://github.com/raycast/extensions/issues/32497\">#32497</a>, <code>triggerOnDrafts: false</code>) so marking ready triggers one clean review.",
+        "tradeoff": "Drafts lose automatic early feedback; authors who want it can ask Greptile with a comment."
+      },
+      {
+        "title": "Give a duplicate somewhere to go",
+        "reach": "1 in 4 new submissions",
+        "cost": "Medium",
+        "what": "353 were told a similar extension already exists. Redirects rarely turn into contributions: of 460 unmerged submissions across the window whose reviewer linked a specific Store extension, 33 (7%) had a later merged PR from the same author to that extension. Offer ownership transfer or co-maintainership when the existing extension is unmaintained, allow a separate extension when it doesn't cover the platform, and hand the PR off instead of closing it.",
+        "tradeoff": "Some near-duplicates in the Store, against redirects that seldom become contributions."
+      },
+      {
+        "title": "Make the first human review the last round",
+        "reach": "368 reviewed, then closed",
+        "cost": "Medium",
+        "what": "In 272 of them the author had answered earlier feedback and a reviewer spoke last; in 185 of those, the author's last action came before the first human reply. They answered Greptile, waited, and didn't come back after the human review. A complete checklist in the first human review, and a stale timer that pauses while the author is waiting on a reviewer (an <code>awaiting review</code> label applied when the author pushes after feedback).",
+        "tradeoff": "Each review takes longer to write, and PRs waiting on reviewers stay open longer."
+      },
+      {
+        "title": "Replace the PR checklist with checks",
+        "reach": "Every PR",
+        "cost": "Low",
+        "what": "The five checkboxes are self-attestations. Two are file checks a script can verify, and the build half of a third is already run by CI. Move those to CI and keep what only a person knows: a Store search, a promise to mark ready, testing the build in Raycast, a screencast, and whether they can respond to review.",
+        "tradeoff": "CI checks need upkeep; the checkboxes cost nothing to maintain, but nothing enforces them."
+      }
+    ]
+  },
+  "timeline": {
+    "title": "What changed, and when",
+    "body": "Each event below is also a numbered dot on the month-by-month charts, when it falls in the range shown. Toggle the layers to declutter, or narrow the charts to the Greptile era."
+  },
+  "longtail": {
+    "title": "Most extensions are small, and a few carry the Store",
+    "body": "<p>The Store lists 3,437 extensions with 14.7 million downloads between them. <strong>The median extension has 230 downloads.</strong> The top 1% (34 extensions) account for 44% of all downloads and the top 10% for 87%; the bottom half accounts for 0.9%. Google Translate, Spotify Player, Visual Studio Code and Linear each passed 400,000.</p><p>Newer extensions have fewer downloads, and they've also had less time to collect them: the median extension published in 2022 has 1,356 downloads, 2024 has 325 and 2026 has 30. A single snapshot can't separate age from demand. This is a snapshot from the Store's public listing data on the same day as the PR data.</p>"
+  },
+  "unshipped": {
+    "title": "What the Store could have had",
+    "body": "<p>Ten new extensions that were built, reviewed and closed unmerged. Each was substantial (thousands of lines) and the author responded to at least one round of review. How much each overlaps what's in the Store varies; the cards say. Seven were redirected to an existing extension. <strong>Across the whole window, 460 unmerged submissions had a reviewer link a specific Store extension; 33 of those authors (7%) later merged a PR into it.</strong> That counts only the first linked extension, so it's a rough measure, not a precise one. The extensions authors were sent to are often small: Perry has 69 downloads, 7TV Emotes Search 31, Amp Dash X 99.</p>"
+  },
+  "checklist": {
+    "title": "A checklist worth checking",
+    "current": [
+      "I read the extension guidelines",
+      "I read the documentation about publishing",
+      "I ran npm run build and tested this distribution build in Raycast",
+      "I checked that files in the assets folder are used by the extension itself",
+      "I checked that assets used in the README are located outside the metadata folder if they were not generated with our metadata tool"
+    ],
+    "critique": "All five are self-attestations. Two say \"I read the docs.\" The third bundles a build, which CI already runs, with testing in Raycast, which only a person can do. The last two are file checks a script can do. None address what loses new extensions in this data: drafts never marked ready, duplicates, and the review loop.",
+    "proposed": [
+      "<strong>New extension?</strong> I searched the Store for this service. If something similar exists, I explain below why this should be separate (different platform, unmaintained, different scope), or I'm contributing to it instead.",
+      "I tested the production build in Raycast.",
+      "I'll <strong>mark this PR Ready for review</strong> when it's done. Drafts aren't reviewed. A PR with no activity for 25 days is marked stale and closed 7 days later.",
+      "I attached a screencast or screenshots of what changed.",
+      "I can respond to review within two weeks, or I've said so below."
+    ],
+    "automated": "Move to CI, no checkbox: build and lint, the deterministic Greptile rules (CHANGELOG format, screenshots, generated preference types, package.json fields), unused files in assets, README asset paths (allowing images generated by the metadata tool)."
+  }
+}

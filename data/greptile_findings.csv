@@ -1,0 +1,19 @@
+theme,findings,share_pct,prs,abandoned_prs,share_before_rubric_pct,share_after_rubric_pct,in_public_rubric,greptile_rules,example
+Behavior bugs and edge cases,11642,31.8,4555,1285,26.8,34.9,no,,path variable not quoted - breaks with spaces
+"Cleanup: unused code, logging, naming, duplication",5239,14.3,2081,625,27.7,6.1,no,,missing newline at end of file
+CHANGELOG entry or {PR_MERGE_DATE} format,3476,9.5,3082,685,5.5,12.0,yes,"02, 07, 08",Use `{PR_MERGE_DATE}` placeholder instead of hardcoded date
+"Error handling (showFailureToast, try/catch, unhandled)",3399,9.3,1470,470,19.1,3.2,yes,,Could be simplified using showFailureToast from @raycast/utils
+"package.json metadata (title, categories, platforms, $schema)",1845,5.0,1373,490,5.4,4.8,partly,"10, 11, 16, 18, 24",Missing subtitle - consider adding 'FuelIX' for consistency with other commands
+Hand-typed preferences or arguments (use generated types),1662,4.5,1329,509,0.3,7.2,no,"01, 13",Remove manual `Preferences` interface - it's auto-generated in `raycast-env.d.ts`
+"Raycast API idioms (getFavicon, launchCommand, trash, hooks)",1565,4.3,1134,281,2.5,5.4,partly,"15, 19, 20, 21, 26, 30",Use Raycast's built-in `trash()` method instead of `unlinkSync` for safer file deletion.
+"Security: injection, secrets, unsafe shell",1486,4.1,980,365,2.5,5.0,no,17,"<a href=""#""><img alt=""security"" src=""https://greptile-static-assets.s3.amazonaws.com/badges/Security.svg?v=2"" align=""top""></a> Shell injecti"
+"Type safety (any, unsafe casts)",980,2.7,782,237,2.5,2.8,no,,Use strict equality (`===`) instead of loose equality (`==`) for better type safety
+"Lint / formatting config (ESLint, Prettier)",904,2.5,782,323,0.8,3.5,partly,"05, 09, 14",Use the default `eslint.config.js` template instead of `.eslintrc.json`:
+Performance and re-renders,899,2.5,669,184,1.9,2.8,no,22,All references to SupermemoryAPIError need to be updated to CognimemoAPIError
+Localization / non-English text,731,2.0,355,162,1.7,2.2,yes,06,Spanish comment should be in English.
+Other,641,1.8,449,121,0.1,2.8,no,,
+Screenshots / metadata folder,561,1.5,523,234,0.4,2.2,partly,03,Move image from media/ to metadata/ folder for store submission
+"Dependencies, lock files, fetch polyfills",552,1.5,478,185,0.5,2.1,partly,"04, 12",Remove `node-fetch` import - `fetch` is built-in global in Node 21+
+Docs and README,435,1.2,367,146,1.4,1.0,partly,,This image should be in the metadata folder since it's used in README
+Windows / cross-platform compatibility,382,1.0,272,63,0.4,1.5,no,"18, 19, 31",Incorrect capitalization: `windows` should be `Windows`
+AI tools / ai.yaml configuration,172,0.5,149,45,0.5,0.5,yes,,Consider adding `ai` and `tools` fields with `evals` since this is an AI-powered extension

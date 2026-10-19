@@ -1,0 +1,150 @@
+{
+ "fetched_at": "2026-10-19T21:01:43+00:00",
+ "extensions": 3437,
+ "downloads": 14692856,
+ "median": 230,
+ "top1pct_share": 44.4,
+ "top10pct_share": 87.0,
+ "bottom50pct_share": 0.9,
+ "bands": [
+  {
+   "band": "0\u20139",
+   "extensions": 238,
+   "downloads": 1100
+  },
+  {
+   "band": "10\u201399",
+   "extensions": 962,
+   "downloads": 42063
+  },
+  {
+   "band": "100\u2013999",
+   "extensions": 1290,
+   "downloads": 481734
+  },
+  {
+   "band": "1k\u201310k",
+   "extensions": 723,
+   "downloads": 2258320
+  },
+  {
+   "band": "10k\u2013100k",
+   "extensions": 195,
+   "downloads": 5824603
+  },
+  {
+   "band": "100k+",
+   "extensions": 29,
+   "downloads": 6085036
+  }
+ ],
+ "cohorts": [
+  {
+   "year": 2021,
+   "extensions": 152,
+   "median": 8242.5
+  },
+  {
+   "year": 2022,
+   "extensions": 581,
+   "median": 1356
+  },
+  {
+   "year": 2023,
+   "extensions": 536,
+   "median": 643.0
+  },
+  {
+   "year": 2024,
+   "extensions": 571,
+   "median": 325
+  },
+  {
+   "year": 2025,
+   "extensions": 645,
+   "median": 179
+  },
+  {
+   "year": 2026,
+   "extensions": 952,
+   "median": 30.0
+  }
+ ],
+ "top": [
+  {
+   "title": "Google Translate",
+   "folder": "google-translate",
+   "downloads": 503668
+  },
+  {
+   "title": "Spotify Player",
+   "folder": "spotify-player",
+   "downloads": 496065
+  },
+  {
+   "title": "Visual Studio Code",
+   "folder": "visual-studio-code-recent-projects",
+   "downloads": 417018
+  },
+  {
+   "title": "Linear",
+   "folder": "linear",
+   "downloads": 406513
+  },
+  {
+   "title": "Slack",
+   "folder": "slack",
+   "downloads": 339036
+  },
+  {
+   "title": "Brew",
+   "folder": "brew",
+   "downloads": 298844
+  },
+  {
+   "title": "Notion",
+   "folder": "notion",
+   "downloads": 283773
+  },
+  {
+   "title": "ChatGPT",
+   "folder": "chatgpt",
+   "downloads": 263542
+  },
+  {
+   "title": "1Password",
+   "folder": "1password",
+   "downloads": 255184
+  },
+  {
+   "title": "Arc",
+   "folder": "arc",
+   "downloads": 254260
+  },
+  {
+   "title": "GitHub",
+   "folder": "github",
+   "downloads": 212929
+  },
+  {
+   "title": "Speedtest",
+   "folder": "speedtest",
+   "downloads": 188539
+  },
+  {
+   "title": "Obsidian",
+   "folder": "obsidian",
+   "downloads": 178259
+  },
+  {
+   "title": "Apple Notes",
+   "folder": "apple-notes",
+   "downloads": 157324
+  },
+  {
+   "title": "Coffee",
+   "folder": "coffee",
+   "downloads": 155159
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+date,layer,label,source
+2025-02-17,review,Greptile's first review (#17128),data
+2025-02-24,agents,Claude Code research preview,https://www.anthropic.com/news/claude-3-7-sonnet
+2025-02-25,review,Stale clock 21+14 days,stale.yml
+2025-02-26,raycast,AI Extensions beta (v1.93),https://www.raycast.com/changelog/macos-v1/1-93-0
+2025-03-26,review,Stale clock back to 14+7,stale.yml
+2025-04-01,review,Most PRs now open as drafts (ray publish; inferred from data),data
+2025-04-16,agents,OpenAI Codex CLI,https://openai.com/index/introducing-o3-and-o4-mini/
+2025-05-08,raycast,MCP servers + MCP Registry extension (v1.98),https://www.raycast.com/changelog/macos-v1
+2025-05-22,agents,Claude Code GA,https://www.anthropic.com/news/claude-4
+2025-06-26,raycast,Windows ready for beta (0.25),https://www.raycast.com/changelog/windows/0-25
+2025-08-29,review,Public review rubric published (copilot-instructions.md),https://github.com/raycast/extensions/blob/main/.github/copilot-instructions.md
+2025-09-18,raycast,Windows: build your own extensions (0.31),https://www.raycast.com/changelog/windows/0-31
+2025-11-27,raycast,Windows public beta (0.38),https://www.raycast.com/changelog/windows/0-38
+2025-12-20,review,Stale clock 15+30,stale.yml
+2026-01-15,review,Stale clock back to 14+7,stale.yml
+2026-03-27,raycast,Raycast 2.0 private beta (0.51),https://www.raycast.com/changelog/macos/0-51
+2026-05-19,raycast,Raycast 2.0 public beta (0.60),https://www.raycast.com/changelog/macos/0-60
+2026-06-02,review,Stale clock 25+7,stale.yml
+2026-08-25,raycast,Raycast 2.0 launch,https://www.raycast.com/changelog/macos/2-0
+2026-09-28,raycast,Extensions can supply AI models (2.5),https://www.raycast.com/changelog/macos/2-5
