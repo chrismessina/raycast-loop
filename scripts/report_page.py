@@ -2,7 +2,7 @@
 
 Narrative lives in site/narrative.json so numbers and prose can be revised independently.
 """
-import csv, html, json, statistics as st
+import base64, csv, html, json, statistics as st
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -123,6 +123,7 @@ def section(sid, eyebrow, title, body):
 
 
 N = NARR
+ICONS = {f.stem: "data:image/png;base64," + base64.b64encode(f.read_bytes()).decode() for f in sorted((D / "icons").glob("*.png"))}
 
 LT = json.loads((D / "downloads_longtail.json").read_text())
 FLOW = json.loads((D / "flow_2026h1.json").read_text())
@@ -145,7 +146,8 @@ recs_html = "".join(
 
 # ---- horizontal timeline: events placed by date, stacked into rows so labels never overlap
 from datetime import date as _d
-T0, T1, TW = _d(2025, 1, 1), _d(2026, 11, 1), 3400  # no events before 2025
+T0, T1 = _d.fromisoformat(EV[0]["date"]) - timedelta(days=4), _d(2026, 11, 1)  # start just before the first event
+TW = round((T1 - T0).days * 5.3)
 xof = lambda iso: round((_d.fromisoformat(iso) - T0).days / (T1 - T0).days * TW)
 CARD = 176
 rows_end, placed = [], []
@@ -157,11 +159,14 @@ for i, v in enumerate(EV):
     rows_end[row] = x + CARD
     placed.append((i, v, x, row))
 ticks = []
-y, m = 2025, 1
+y, m = (T0.year, T0.month + 1) if T0.month < 12 else (T0.year + 1, 1)
+first = True
 while (y, m) < (2026, 11):
     x = xof(f"{y}-{m:02d}-01")
-    lab = str(y) if m == 1 else ("Apr" if m == 4 else "Jul" if m == 7 else "Oct" if m == 10 else "")
-    ticks.append(f'<span class="tl-tick{" yr" if m == 1 else ""}" style="left:{x}px">{lab}</span>')
+    mon = _d(y, m, 1).strftime("%b")
+    lab = f"{mon} {y}" if first or m == 1 else mon
+    ticks.append(f'<span class="tl-tick{" yr" if m == 1 or first else ""}" style="left:{x}px">{lab}</span>')
+    first = False
     m += 1
     if m == 13:
         y, m = y + 1, 1
@@ -170,7 +175,8 @@ timeline_html = (
     f'<div class="tl-scroll" tabindex="0" aria-label="Timeline of events, scrolls horizontally">'
     f'<div class="tl" style="width:{TW + CARD}px;height:{tl_height}px"><div class="tl-axis"></div>{"".join(ticks)}'
     + "".join(f'<div class="tl-ev" data-layer="{e(v["layer"])}" style="left:{x}px;top:{40 + row * 70}px">'
-              f'<span class="ev-n">{i + 1}</span><span class="ev-d">{e(v["date"])}</span><span class="ev-l">{e(v["label"])}</span></div>'
+              f'<span class="ev-i"><img src="{ICONS[v["icon"]]}" alt=""></span><span class="ev-d">{e(v["date"])}</span>'
+              + (f'<a class="ev-l" href="{e(v["url"])}">{e(v["label"])}</a>' if v["url"] else f'<span class="ev-l">{e(v["label"])}</span>') + '</div>'
               for i, v, x, row in placed)
     + '</div></div>')
 
@@ -225,10 +231,7 @@ checklist_html = (
     f'<p class="dim">{e(CK["automated"])}</p></div></div>')
 
 payload = json.dumps({"months": months, "provisional_from": provisional_from, "charts": charts,
-                      "events": EV}, separators=(",", ":"))
-events_list = "".join(
-    f"<li data-layer='{e(v['layer'])}'><span class='ev-n'>{i + 1}</span><span class='ev-d'>{e(v['date'])}</span>"
-    f"<span>{e(v['label'])}</span></li>" for i, v in enumerate(EV))
+                      "events": EV, "icons": ICONS}, separators=(",", ":"))
 
 page = f"""<title>The Raycast Loop</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -259,9 +262,9 @@ code {{ font: 12.5px var(--mono); color: var(--fg-3); }}
 .pill {{ font: 500 12px var(--mono); color: var(--fg-2); border: 1px solid var(--line); background: rgba(255,255,255,.03);
   border-radius: 999px; padding: 5px 14px; letter-spacing: .3px; }}
 .pill b {{ color: var(--accent); font-weight: 500; }}
-h1 {{ margin: 0; font: 600 clamp(36px, 7vw, 64px)/1.05 var(--sans); letter-spacing: -1.5px; text-wrap: balance; max-width: 16ch;
+h1 {{ margin: 0; padding-bottom: .12em; font: 600 clamp(36px, 7vw, 64px)/1.18 var(--sans); letter-spacing: -1.5px; text-wrap: balance; max-width: 16ch;
   background: linear-gradient(180deg, #fff 30%, #9c9c9d); -webkit-background-clip: text; background-clip: text; color: transparent; }}
-.lede {{ margin: 0; max-width: 62ch; color: var(--fg-3); font-size: 17px; text-wrap: pretty; }}
+.lede {{ margin: 0; max-width: 62ch; color: var(--fg-3); font-size: 17px; line-height: 1.7; text-wrap: pretty; }}
 .byline {{ font: 12px var(--mono); color: var(--fg-4); }}
 .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1px; width: 100%; margin-top: 18px;
   background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }}
@@ -270,12 +273,13 @@ h1 {{ margin: 0; font: 600 clamp(36px, 7vw, 64px)/1.05 var(--sans); letter-spaci
 .stat span {{ color: var(--fg-3); font-size: 13.5px; line-height: 1.45; }}
 section {{ display: grid; gap: 28px; min-width: 0; }}
 .sec-head {{ display: grid; gap: 10px; }}
-.eyebrow {{ font: 500 12px var(--mono); letter-spacing: .3px; color: var(--accent); }}
+.eyebrow {{ font: 500 12px var(--mono); letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }}
 h2 {{ margin: 0; font: 600 clamp(26px, 4vw, 36px)/1.15 var(--sans); letter-spacing: -.8px; text-wrap: balance; max-width: 26ch; }}
 h3 {{ margin: 0; font: 600 17px/1.3 var(--sans); letter-spacing: -.2px; }}
 .prose {{ display: grid; gap: 14px; max-width: 68ch; color: var(--fg-2); }}
 .prose p {{ margin: 0; }}
 .prose strong {{ color: var(--fg); font-weight: 600; }}
+.prose ul {{ margin: 0; padding-left: 20px; display: grid; gap: 8px; }}
 .chart {{ margin: 0; background: linear-gradient(180deg, var(--raised), var(--surface)); border: 1px solid var(--line);
   border-radius: 16px; padding: 22px; display: grid; gap: 14px; min-width: 0; }}
 .chart figcaption {{ display: grid; gap: 4px; }}
@@ -314,15 +318,18 @@ h3 {{ margin: 0; font: 600 17px/1.3 var(--sans); letter-spacing: -.2px; }}
 .tl-tick {{ position: absolute; top: 6px; font: 11px var(--mono); color: var(--fg-4); transform: translateX(-1px);
   border-left: 1px solid var(--line); padding-left: 4px; height: 20px; }}
 .tl-tick.yr {{ color: var(--fg-2); border-color: var(--fg-4); }}
-.tl-ev {{ position: absolute; width: 168px; display: grid; grid-template-columns: 20px 1fr; gap: 2px 6px; font-size: 12.5px;
+.tl-ev {{ position: absolute; width: 168px; display: grid; grid-template-columns: 20px 1fr; gap: 2px 8px; font-size: 12.5px;
   border-left: 1px dashed var(--line); padding-left: 6px; }}
 .tl-ev[hidden] {{ display: none; }}
 .tl-ev .ev-d {{ grid-column: 2; }}
 .tl-ev .ev-l {{ grid-column: 2; color: var(--fg-2); line-height: 1.35; }}
-.tl-ev .ev-n {{ grid-row: 1 / span 2; }}
-.tl-ev[data-layer="raycast"] .ev-n {{ background: var(--accent); }}
-.tl-ev[data-layer="agents"] .ev-n {{ background: var(--s1); }}
-.tl-ev[data-layer="review"] .ev-n {{ background: var(--s3); }}
+a.ev-l {{ text-decoration-color: var(--line); }}
+.ev-i {{ grid-row: 1 / span 2; width: 20px; height: 20px; border-radius: 6px; background: #fff; display: grid; place-items: center;
+  box-shadow: 0 0 0 2px var(--lc); }}
+.ev-i img {{ width: 14px; height: 14px; border-radius: 3px; }}
+.tl-ev[data-layer="raycast"] {{ --lc: var(--accent); }}
+.tl-ev[data-layer="agents"] {{ --lc: var(--s1); }}
+.tl-ev[data-layer="review"] {{ --lc: var(--s3); }}
 .flow {{ margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }}
 .flow-scroll {{ overflow-x: auto; }}
 .flow svg {{ display: block; width: 100%; min-width: 820px; height: auto; color: var(--fg-3); }}
@@ -354,11 +361,6 @@ ul.ck li::before {{ content: ""; position: absolute; left: 0; top: 3px; width: 1
 .events ol {{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 6px 22px; }}
 .events li {{ display: grid; grid-template-columns: 22px 84px 1fr; gap: 8px; font-size: 13px; color: var(--fg-2); align-items: baseline; }}
 .events li[hidden] {{ display: none; }}
-.ev-n {{ font: 500 11px var(--mono); color: var(--bg); background: var(--fg-3); border-radius: 999px; width: 18px; height: 18px;
-  display: inline-grid; place-items: center; }}
-li[data-layer="raycast"] .ev-n {{ background: var(--accent); }}
-li[data-layer="agents"] .ev-n {{ background: var(--s1); }}
-li[data-layer="review"] .ev-n {{ background: var(--s3); }}
 .ev-d {{ font: 12px var(--mono); color: var(--fg-4); }}
 .layers {{ display: flex; flex-wrap: wrap; gap: 8px; }}
 details.tablev summary {{ cursor: pointer; font: 500 12.5px var(--sans); color: var(--fg-3); width: max-content; }}
@@ -371,7 +373,8 @@ td.num, th.num {{ text-align: right; white-space: nowrap; }}
 td.rank {{ color: var(--fg-4); font-family: var(--mono); width: 2ch; }}
 tr:last-child td {{ border-bottom: 0; }}
 .dim {{ color: var(--fg-3); }}
-.callout {{ border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--surface); display: grid; gap: 12px; }}
+.callout {{ border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--surface); display: grid; gap: 12px; align-content: start; }}
+.callout.verdict .prose {{ max-width: none; }}
 .callout.verdict {{ border-color: rgba(255,99,99,.35); background: linear-gradient(180deg, rgba(255,99,99,.07), var(--surface)); }}
 .cols {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
 .cols ul {{ margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--fg-2); }}
@@ -385,7 +388,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
   <span class="pill">raycast/extensions · {e(N['window'])} · data as of <b>{collected}</b></span>
   <h1>{e(N['title'])}</h1>
   <p class="lede">{N['lede']}</p>
-  <span class="byline">Independent analysis by Chris Messina. Not affiliated with or endorsed by Raycast.</span>
+  <span class="byline">Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span>
   <div class="stats">{''.join(f'<div class="stat"><b>{e(a)}</b><span>{e(b)}</span></div>' for a, b in H)}</div>
 </header>
 
@@ -473,7 +476,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
          f'<div class="scroll"><table><thead><tr><th>In effect</th><th>Stale + close (days)</th><th class="num">Auto-closes under it</th></tr></thead><tbody>{clock_rows}</tbody></table></div>')}
 
 <footer><span>Data: GitHub GraphQL, {collected}. Scripts and derived data: <a href="https://github.com/chrismessina/raycast-loop">github.com/chrismessina/raycast-loop</a>. Raw GraphQL snapshot: <a href="https://github.com/chrismessina/raycast-loop/releases/download/data-2026-10-19/raw.tar.zst">raw.tar.zst</a> (17 MB).</span>
-<span>Independent analysis by Chris Messina. Not affiliated with or endorsed by Raycast.</span></footer>
+<span>Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span></footer>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script id="payload" type="application/json">{payload.replace("</", "<\\/")}</script>
@@ -486,6 +489,7 @@ const SLOTS = ["--s0", "--s1", "--s2", "--s3", "--s4"].map(tok);
 const layersOn = new Set(["raycast", "agents", "review"]);
 const LAYER_COLOR = {{ raycast: tok("--accent"), agents: tok("--s1"), review: tok("--s3") }};
 const charts = [];
+const ICON = Object.fromEntries(Object.entries(DATA.icons).map(([k, src]) => {{ const im = new Image(); im.onload = () => charts.forEach(c => c.update()); im.src = src; return [k, im]; }}));
 
 Chart.defaults.font.family = tok("--sans");
 Chart.defaults.font.size = 12;
@@ -520,10 +524,10 @@ const eventsPlugin = {{
       ctx.strokeStyle = LAYER_COLOR[ev.layer]; ctx.globalAlpha = 0.45; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(px, a.top + 10); ctx.lineTo(px, a.bottom); ctx.stroke();
       ctx.globalAlpha = 1; ctx.setLineDash([]);
-      ctx.fillStyle = LAYER_COLOR[ev.layer];
-      ctx.beginPath(); ctx.arc(px, a.top + 2, 7, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = tok("--bg"); ctx.font = `500 9.5px ${{tok("--mono")}}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillText(String(i + 1), px, a.top + 2.5);
+      ctx.fillStyle = "#fff"; ctx.strokeStyle = LAYER_COLOR[ev.layer]; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(px, a.top + 2, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      const im = ICON[ev.icon];
+      if (im && im.complete) ctx.drawImage(im, px - 6, a.top - 4, 12, 12);
     }});
     ctx.restore();
   }}
