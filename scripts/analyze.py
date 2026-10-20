@@ -240,6 +240,7 @@ def derive(p, df):
         "first_feedback_at": first_fb.isoformat() if first_fb else "",
         "last_author_activity_at": activity[-1].isoformat() if activity else "",
         "waiting_on_reviewer_at_close": waiting_on_reviewer,
+        "last_feedback_at": last_fb[0].isoformat() if last_fb else "",
         "days_to_merge": days(created, merged), "days_to_first_maint": days(created, maint_resp[0] if maint_resp else None),
         "days_to_first_human": days(created, human_resp[0] if human_resp else None),
         "days_to_first_feedback": days(created, first_fb),
@@ -285,6 +286,10 @@ def chains(rows):
         fbs = [x["first_feedback_at"] for x in rs if x["first_feedback_at"]]
         acts_ = [x["last_author_activity_at"] for x in rs if x["last_author_activity_at"]]
         final["author_responded_after_feedback"] = bool(fbs and acts_ and max(acts_) > min(fbs))
+        # who acted last is a chain-wide question too: the author may have answered an older PR's feedback on a newer one
+        lfbs = [x["last_feedback_at"] for x in rs if x["last_feedback_at"]]
+        last_act = max(acts_) if acts_ else final["created_at"]
+        final["waiting_on_reviewer_at_close"] = bool(final["closed_unmerged"] and lfbs and last_act > max(lfbs))
         final["chain_ever_ready"] = any(x["ever_ready"] for x in rs)
         if not final["last_feedback_source"]:
             final["last_feedback_source"] = next((x["last_feedback_source"] for x in reversed(rs)

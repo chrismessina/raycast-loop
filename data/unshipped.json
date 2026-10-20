@@ -3,80 +3,80 @@
     "number": 29562,
     "name": "Amp",
     "opened": "2026-07",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "Five commands for Amp, the coding agent: start a thread, capture a window into a thread, track running threads from the menu bar.",
-    "story": "Redirected to Amp Dash X (99 downloads). That extension's author replied that it is \"super basic and won't get any future updates\", offered to transfer ownership, and after the auto-close asked maintainers to reconsider."
+    "story": "A maintainer redirected it to Amp Dash X (99 downloads). That extension's author replied that it is \"super basic and won't get any future updates\", offered to transfer ownership, and after the auto-close asked maintainers to reconsider."
   },
   {
     "number": 30286,
     "name": "TickTick Cloud",
     "opened": "2026-08",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "TickTick for Windows: OAuth sign-in, six task commands and three AI tools, with tests.",
-    "story": "Redirected to TickTick+ (164 downloads). Both TickTick+ and TickTick (25,304 downloads) list macOS only, so Windows users still have no TickTick extension."
+    "story": "A maintainer redirected it to TickTick+ (164 downloads). Both TickTick+ and TickTick (25,304 downloads) list macOS only, so Windows users still have no TickTick extension."
   },
   {
     "number": 24709,
     "name": "Coolify Ops",
     "opened": "2026-01",
-    "outcome": "Closed by author",
+    "outcome": "Closed by the contributor",
     "what": "14 commands covering the full Coolify API: applications, deployments, databases, services, servers.",
-    "story": "The existing Coolify extension (612 downloads) is actively maintained, so a second one was declined. The author: \"I'll be just using it privately for now then and if there's time consider contributing!\""
+    "story": "Another contributor, then a maintainer, pointed to the existing Coolify extension (612 downloads), and its owner confirmed it's actively maintained and invited contributions. The contributor kept it for private use and closed the PR: \"I'll be just using it privately for now then and if there's time consider contributing!\""
   },
   {
     "number": 31117,
     "name": "PostgreSQL",
     "opened": "2026-09",
-    "outcome": "Closed by author",
+    "outcome": "Closed by the contributor",
     "what": "A Postgres client with schema browsing, history, saved connections, and Raycast AI tools with read-only transactions and row limits.",
-    "story": "A maintainer praised the safety work and pointed to Perry (69 downloads). The author wanted a separate extension and closed the PR."
+    "story": "A maintainer praised the safety work and pointed to Perry (69 downloads). The contributor wanted a separate extension and closed the PR."
   },
   {
     "number": 28319,
     "name": "Mac Updater",
     "opened": "2026-05",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "One view for updates from Homebrew casks and formulae, the Mac App Store, Sparkle, Electron, GitHub releases, npm, pip and Ruby gems.",
-    "story": "The author fixed the first round of Greptile findings within a day, including a real shell-injection path. Later findings were still open when the PR was weighed against App Updates (741 downloads) and Brew; no decision came before the stale bot closed it."
+    "story": "The contributor fixed Greptile's first round of findings within a day, including a real shell-injection path. Later findings were still open when a maintainer pointed to App Updates (741 downloads) and Brew, and App Updates' author left the call to the team; no maintainer decision came before the stale bot closed it."
   },
   {
     "number": 27793,
     "name": "AI Costs Dashboard",
     "opened": "2026-05",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "Local spend tracking for Claude Code, Codex and Amp.",
-    "story": "One change request, then no reply; marked stale 25 days later and closed a week after that. Agent Usage, a usage and quota monitor that shipped in February 2026, has drawn 50 merged PRs from 24 authors; local spend tracking is a related but separate need."
+    "story": "A maintainer requested changes once and the contributor didn't reply; the stale bot marked it stale 25 days later and closed it a week after that. Agent Usage, a usage and quota monitor that shipped in February 2026, has drawn 50 merged PRs from 24 authors; local spend tracking is a related but separate need."
   },
   {
     "number": 29328,
     "name": "LM Studio Chat",
     "opened": "2026-07",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "Chat with local models through LM Studio's API, no cloud dependency.",
-    "story": "Pointed to a different LM Studio PR already in the queue, which merged; that extension has 213 downloads. Ollama AI, another way to chat with local models, has 42,591 downloads."
+    "story": "A maintainer pointed to a different LM Studio PR already in the queue, which merged; that extension has 213 downloads. Ollama AI, another way to chat with local models, has 42,591 downloads."
   },
   {
     "number": 17939,
     "name": "Limitless",
     "opened": "2025-03",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "Browse and analyze Limitless Pendant transcripts with Raycast AI.",
-    "story": "Reviewed, then stalled when the author ran out of time, even after a maintainer pinged them on X. There is still no Limitless extension in the Store."
+    "story": "A maintainer asked the contributor to address Greptile's suggestions; it stalled when the contributor ran out of time, even after the maintainer pinged them on X and two other contributors offered to help. There is still no Limitless extension in the Store."
   },
   {
     "number": 25613,
     "name": "Ramadan",
     "opened": "2026-02",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "Suhoor and Iftar times, a 30-day calendar and a menu-bar countdown, from a first-time contributor.",
-    "story": "Pointed to Adhan Time (1,210 downloads) within hours. The author agreed to contribute there instead; no PR followed."
+    "story": "Another contributor, then a maintainer, pointed to Adhan Time (1,210 downloads) within hours. The contributor agreed to contribute there instead; no PR followed."
   },
   {
     "number": 30619,
     "name": "Emotecast",
     "opened": "2026-08",
-    "outcome": "Auto-closed",
+    "outcome": "Closed by the stale bot",
     "what": "One search across 7TV, BetterTTV and FrankerFaceZ emotes, with sizing and animation handling.",
-    "story": "Asked to contribute to 7TV Emotes Search (31 downloads) instead. It auto-closed a month later."
+    "story": "A maintainer asked the contributor to work on 7TV Emotes Search (31 downloads) instead. The stale bot closed it a month later."
   }
 ]

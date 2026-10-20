@@ -61,6 +61,6 @@ contributor requesting changes.
 - GitHub's live search finds 2,030 closed-unmerged PRs with the stalled label in the window; the raw
   data has 2,030. 1,907 of those are auto-closed by the bot and 123 were closed by a person while
   stalled; 25 further auto-closes lost the label later (1,932 auto-closed in total).
-- Three rounds of adversarial review by Codex (definitions vs. code, every published number vs. the
-  CSVs); all corrections are applied.
+- Four rounds of adversarial review by Codex (definitions vs. code, every published number vs. the
+  CSVs, and every named actor vs. the raw PR records); all corrections are applied.
 - Duplicate heuristic: 30 matches checked against both extensions' Store descriptions, 47% precision.

@@ -39,8 +39,8 @@ charts = {
     "volume": {"unit": "PRs", "series": [
         ["New-extension PRs", col("new_prs", int), 0], ["Existing-extension PRs", col("existing_prs", int), 3]]},
     "outcomes": {"unit": "submissions", "series": [
-        ["Merged", col("merged", int), 0], ["Closed by author", col("author_closed", int), 1],
-        ["Auto-closed (stale)", col("auto_closed", int), 2], ["Closed by maintainer or owner", col("rejected", int), 3],
+        ["Merged", col("merged", int), 0], ["Closed by contributor", col("author_closed", int), 1],
+        ["Auto-closed (stale)", col("auto_closed", int), 2], ["Closed by someone else", col("rejected", int), 3],
         ["Still open", col("open", int), 4], ["Closer unknown", col("unknown", int), 0]]},
     "rates": {"unit": "%", "series": [
         ["New: merged", col("new_merged_pct"), 0], ["Existing: merged", col("existing_merged_pct"), 1],
@@ -50,27 +50,27 @@ charts = {
         ["New submissions never marked ready", col("new_never_ready_pct"), 1],
         ["Auto-closed new submissions never marked ready", col("new_auto_never_ready_pct"), 2]]},
     "autoclose_state": {"unit": "submissions", "series": [
-        ["Had a human reply", col("new_ready_auto_human", int), 0],
+        ["Had a maintainer reply", col("new_ready_auto_human", int), 0],
         ["Never marked ready", col("new_auto_never_ready", int), 2],
-        ["Ready, no human reply", ready_nohuman, 3]]},
+        ["Ready, no maintainer reply", ready_nohuman, 3]]},
     "velocity": {"unit": "days", "series": [
         ["New: median days, ready to merge", col("new_ready_ttm_median"), 0],
         ["Existing: median days to merge", col("existing_ttm_median"), 1],
-        ["New: median days, ready to first human reply", col("new_ready_first_human_median"), 2],
-        ["Existing: median days to first human reply", col("existing_first_human_median"), 3]]},
+        ["New: median days, ready to first maintainer reply", col("new_ready_first_human_median"), 2],
+        ["Existing: median days to first maintainer or owner reply", col("existing_first_human_median"), 3]]},
     "nohuman21": {"unit": "%", "series": [
-        ["Ready new submissions with no human reply within 21 days", col("new_ready_no_human_in_21d_pct"), 2]]},
+        ["Ready new submissions with no maintainer reply within 21 days", col("new_ready_no_human_in_21d_pct"), 2]]},
     "greptile_cov": {"unit": "%", "series": [["Share of PRs Greptile reviewed", col("greptile_pct"), 3]]},
     "greptile_score": {"unit": "/5", "series": [["Mean first confidence score", col("greptile_score_mean"), 0]]},
     "feedback_src": {"unit": "%", "series": [
         ["Greptile", col("fb_greptile_pct"), 3], ["Raycast maintainer", col("fb_maintainer_pct"), 0],
         ["Extension owner", col("fb_owner_pct"), 1], ["Other contributor", col("fb_other_pct"), 4]]},
     "dropout": {"unit": "%", "series": [
-        ["Got feedback, closed unmerged", col("dropped_after_feedback_pct"), 2],
-        ["Got feedback, closed unmerged without replying", col("ghosted_after_feedback_pct"), 1]]},
+        ["Got review comments, closed unmerged", col("dropped_after_feedback_pct"), 2],
+        ["Got review comments, closed unmerged without the contributor replying", col("ghosted_after_feedback_pct"), 1]]},
     "dups": {"unit": "submissions", "series": [
         ["New-extension submissions", col("new_submissions", int), 3],
-        ["Reviewer pointed to an existing extension", col("new_dup_phrase", int), 2],
+        ["A maintainer or Greptile pointed to an existing extension", col("new_dup_phrase", int), 2],
         ["Name matches an older extension", col("new_dup_heur", int), 1],
         ["Both signals", col("new_dup_both", int), 0]]},
 }
@@ -202,30 +202,30 @@ flow_svg = f"""<figure class="flow">
 <div class="flow-scroll"><svg viewBox="0 0 1000 470" role="img" aria-label="Path of {F['submissions']:,} new-extension submissions opened in the first half of 2026: {F['merged']} merged; {F['never_ready']} were never marked ready; {F['auto_closed'] - F['auto_never_ready']} were auto-closed after being marked ready.">
 <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
 <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="f-red"/></marker></defs>
-<g class="f-node"><rect x="10" y="150" width="150" height="64" rx="10"/><text x="85" y="176" text-anchor="middle" class="f-t">Author runs</text><text x="85" y="196" text-anchor="middle" class="f-t"><tspan class="f-mono">ray publish</tspan></text></g>
+<g class="f-node"><rect x="10" y="150" width="150" height="64" rx="10"/><text x="85" y="176" text-anchor="middle" class="f-t">Contributor runs</text><text x="85" y="196" text-anchor="middle" class="f-t"><tspan class="f-mono">ray publish</tspan></text></g>
 <g class="f-node"><rect x="200" y="150" width="170" height="64" rx="10"/><text x="285" y="176" text-anchor="middle" class="f-t">PR opened</text><text x="285" y="196" text-anchor="middle" class="f-s">{F['opened_draft']:,} as drafts · {F['opened_ready']} ready</text></g>
 <g class="f-node"><rect x="410" y="150" width="140" height="64" rx="10"/><text x="480" y="176" text-anchor="middle" class="f-t">Marked ready</text><text x="480" y="196" text-anchor="middle" class="f-s">{F['ready']:,} ({pc(F['ready'])})</text></g>
-<g class="f-node"><rect x="590" y="140" width="210" height="84" rx="10"/><text x="695" y="168" text-anchor="middle" class="f-t">Review</text><text x="695" y="189" text-anchor="middle" class="f-s">Greptile: within minutes</text><text x="695" y="207" text-anchor="middle" class="f-s">first human reply: median {F['median_days_ready_to_human']:.0f} days</text></g>
+<g class="f-node"><rect x="590" y="140" width="210" height="84" rx="10"/><text x="695" y="168" text-anchor="middle" class="f-t">Review</text><text x="695" y="189" text-anchor="middle" class="f-s">Greptile reviews within minutes</text><text x="695" y="207" text-anchor="middle" class="f-s">maintainer reply: median {F['median_days_ready_to_human']:.0f} days</text></g>
 <g class="f-good"><rect x="840" y="150" width="150" height="64" rx="10"/><text x="915" y="176" text-anchor="middle" class="f-t">Merged</text><text x="915" y="196" text-anchor="middle" class="f-s">{F['merged']} ({pc(F['merged'])})</text></g>
 <g class="f-edge"><line x1="160" y1="182" x2="196" y2="182" marker-end="url(#ah)"/><line x1="370" y1="182" x2="406" y2="182" marker-end="url(#ah)"/>
 <line x1="550" y1="182" x2="586" y2="182" marker-end="url(#ah)"/><line x1="800" y1="182" x2="836" y2="182" marker-end="url(#ah)"/></g>
 <path d="M760,140 C760,80 630,80 630,136" class="f-loop" marker-end="url(#ah)"/>
-<text x="695" y="62" text-anchor="middle" class="f-s">changes requested → author pushes fixes → repeat</text>
-<text x="695" y="44" text-anchor="middle" class="f-s">{F['dup_flagged']} of {F['submissions']:,} were told a similar extension already exists</text>
+<text x="695" y="62" text-anchor="middle" class="f-s">review comments → contributor pushes fixes → repeat</text>
+<text x="695" y="44" text-anchor="middle" class="f-s">in {F['dup_flagged']} of {F['submissions']:,}, a maintainer or Greptile pointed to a similar extension</text>
 <g class="f-drop"><path d="M285,214 L285,296" marker-end="url(#ahr)"/><path d="M740,224 L740,296" marker-end="url(#ahr)"/></g>
 <path d="M640,224 L520,300" class="f-edge-grey" marker-end="url(#ah)"/>
 <g class="f-bad"><rect x="160" y="300" width="250" height="90" rx="10"/><text x="285" y="326" text-anchor="middle" class="f-t">Never marked ready: {F['never_ready']}</text>
-<text x="285" y="348" text-anchor="middle" class="f-s">{F['auto_never_ready']} auto-closed as drafts</text><text x="285" y="368" text-anchor="middle" class="f-s">{F['never_ready_author_closed']} closed by the author</text></g>
+<text x="285" y="348" text-anchor="middle" class="f-s">{F['auto_never_ready']} closed as drafts by the stale bot</text><text x="285" y="368" text-anchor="middle" class="f-s">{F['never_ready_author_closed']} closed by the contributor</text></g>
 <g class="f-node"><rect x="430" y="304" width="160" height="82" rx="10"/><text x="510" y="330" text-anchor="middle" class="f-t">Closed by a person</text>
-<text x="510" y="350" text-anchor="middle" class="f-s">{F['ready_author_closed']} by the author</text><text x="510" y="370" text-anchor="middle" class="f-s">{F['rejected']} rejected</text></g>
-<g class="f-bad"><rect x="610" y="300" width="380" height="160" rx="10"/><text x="800" y="326" text-anchor="middle" class="f-t">Auto-closed after ready: {F['auto_closed'] - F['auto_never_ready']}</text>
-<text x="800" y="350" text-anchor="middle" class="f-s">{F['auto_ready_no_human']} never got a human reply</text>
-<text x="800" y="372" text-anchor="middle" class="f-s">{F['auto_reviewed']} got one, then went quiet:</text>
-<text x="800" y="394" text-anchor="middle" class="f-s">{F['auto_reviewed_replied_then_stopped']} had answered earlier feedback; a reviewer spoke last</text>
-<text x="800" y="414" text-anchor="middle" class="f-s">({F['replied_before_first_human']} of them last acted before the first human reply)</text>
-<text x="800" y="436" text-anchor="middle" class="f-s">{F['auto_reviewed_never_replied']} never answered · {F['auto_reviewed_waiting_on_reviewer']} were waiting on a reviewer</text></g>
+<text x="510" y="350" text-anchor="middle" class="f-s">{F['ready_author_closed']} by the contributor</text><text x="510" y="370" text-anchor="middle" class="f-s">{F['rejected']} by a maintainer</text></g>
+<g class="f-bad"><rect x="610" y="300" width="380" height="160" rx="10"/><text x="800" y="326" text-anchor="middle" class="f-t">Closed by the stale bot after ready: {F['auto_closed'] - F['auto_never_ready']}</text>
+<text x="800" y="350" text-anchor="middle" class="f-s">{F['auto_ready_no_human']} never got a maintainer reply</text>
+<text x="800" y="372" text-anchor="middle" class="f-s">{F['auto_reviewed']} got one before the stale bot closed them:</text>
+<text x="800" y="394" text-anchor="middle" class="f-s">{F['auto_reviewed_replied_then_stopped']} had responded; a reviewer commented last</text>
+<text x="800" y="414" text-anchor="middle" class="f-s">({F['replied_before_first_human']} of them last acted before a maintainer replied)</text>
+<text x="800" y="436" text-anchor="middle" class="f-s">{F['auto_reviewed_never_replied']} never responded · {F['auto_reviewed_waiting_on_reviewer']} were waiting on a reviewer</text></g>
 </svg></div>
-<figcaption>The submission loop for new extensions opened January–June 2026 ({F['submissions']:,}). Red boxes are auto-closes. Every submission ends in Merged or in exactly one of the bottom boxes. By outcome: {F['merged']} merged, {F['auto_closed']} auto-closed, {F['author_closed']} closed by the author, {F['rejected']} rejected.</figcaption>
+<figcaption>The submission loop for new extensions opened January–June 2026 ({F['submissions']:,}). Red boxes are stale-bot closes. Every submission ends in Merged or in exactly one of the bottom boxes. By outcome: {F['merged']} merged, {F['auto_closed']} closed by the stale bot, {F['author_closed']} closed by the contributor, {F['rejected']} closed by a maintainer.</figcaption>
 </figure>"""
 
 unshipped_html = "".join(
@@ -462,15 +462,15 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 {section("drafts", "Why they close", N["drafts"]["title"], ic="closed", body=
          f'<div class="prose">{N["drafts"]["body"]}</div>' + flow_svg
          + chart_block("drafts", "Drafts", "Share of all PRs opened as drafts; share of new submissions never marked ready; share of auto-closed new submissions never marked ready.", ic="draft")
-         + chart_block("autoclose_state", "Auto-closed new submissions, by what happened first", "Never-ready PRs were never in a reviewer's queue. The rest were."))}
+         + chart_block("autoclose_state", "New submissions the stale bot closed, by what happened first", "Never-ready PRs never entered the review queue. The rest did."))}
 
 {section("unshipped", "What didn't ship", N["unshipped"]["title"],
          f'<div class="prose">{N["unshipped"]["body"]}</div><div class="uns">{unshipped_html}</div>')}
 
 {section("velocity", "Velocity", N["velocity"]["title"], ic="clock", body=
          f'<div class="prose">{N["velocity"]["body"]}</div>'
-         + chart_block("velocity", "Days to merge and to first human reply (median)", "New extensions are measured from when the PR was marked ready for review. First human reply means a Raycast maintainer or the extension's owner. Medians cover PRs that got a reply.")
-         + chart_block("nohuman21", "Ready new submissions with no human reply within 21 days", "Includes PRs that never got one: closed PRs, plus open ones ready for at least 21 days. 21 days is the stale bot's clock for most of the window.", 260))}
+         + chart_block("velocity", "Days to merge and to first human reply (median)", "New extensions are measured from when the PR was marked ready for review. For new extensions the first reply is a maintainer's; for existing extensions, a maintainer's or the extension owner's. Medians cover PRs that got a reply.")
+         + chart_block("nohuman21", "Ready new submissions with no maintainer reply within 21 days", "Includes PRs that never got one: closed PRs, plus open ones ready for at least 21 days. 21 days is the stale bot's clock for most of the window.", 260))}
 
 {section("greptile", "Greptile", N["greptile"]["title"],
          f'<div class="prose">{N["greptile"]["body"]}</div><div class="grid2">'
@@ -480,8 +480,8 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 
 {section("friction", "Friction", N["friction"]["title"], ic="reply", body=
          f'<div class="prose">{N["friction"]["body"]}</div>'
-         + chart_block("feedback_src", "Where feedback comes from", "Share of submissions that got feedback from each source before closing.")
-         + chart_block("dropout", "Dropout after feedback", "Of submissions that got feedback, the share that closed unmerged, and the share that closed unmerged with no reply from the author."))}
+         + chart_block("feedback_src", "Where feedback comes from", "Share of submissions that got review comments from each source before closing.")
+         + chart_block("dropout", "Dropout after feedback", "Of submissions that got review comments, the share that closed unmerged, and the share that closed unmerged with no reply from the contributor."))}
 
 {section("themes", "What Greptile flags", N["themes"]["title"], ic="rules", body=
          f'<div class="prose">{N["themes"]["body"]}</div>'
@@ -489,7 +489,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 
 {section("duplicates", "Duplicates", N["duplicates"]["title"],
          f'<div class="prose">{N["duplicates"]["body"]}</div>'
-         + chart_block("dups", "New-extension submissions and likely duplicates", "Two imperfect signals over the same submissions: a reviewer linked or named an existing extension, and the new folder shares a rare name with an older one.")
+         + chart_block("dups", "New-extension submissions and likely duplicates", "Two imperfect signals over the same submissions: a maintainer or Greptile linked or named an existing extension, and the new folder shares a rare name with an older one.")
          + (f'<details class="tablev"><summary>Hand-check of {len(DUPCHECK)} name matches</summary><div class="tscroll"><table><thead><tr><th>PR</th><th>New folder</th><th>Matched</th><th>Verdict</th><th>Note</th></tr></thead><tbody>{dup_rows}</tbody></table></div></details>' if DUPCHECK else ''))}
 
 {section("longtail", "Popularity", N["longtail"]["title"],
