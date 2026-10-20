@@ -143,8 +143,10 @@ ICONS = {f.stem: "data:image/png;base64," + base64.b64encode(f.read_bytes()).dec
 LT = json.loads((D / "downloads_longtail.json").read_text())
 FLOW = json.loads((D / "flow_2026h1.json").read_text())
 UNSHIPPED = json.loads((D / "unshipped.json").read_text())
+UICON = {int(f.stem): "data:image/png;base64," + base64.b64encode(f.read_bytes()).decode() for f in (D / "icons" / "unshipped").glob("*.png")}
 CONTRIB = list(csv.DictReader(open(D / "extensions_contributors.csv")))
 
+charts["greptile_cov"]["yEvery"] = charts["greptile_score"]["yEvery"] = 2
 charts["lt_bands"] = {"unit": "%", "type": "bar", "labels": [b["band"] for b in LT["bands"]], "noEvents": True,
                       "xTitle": "Downloads per extension", "series": [
     ["Share of extensions", [round(100 * b["extensions"] / LT["extensions"], 1) for b in LT["bands"]], 3],
@@ -220,7 +222,7 @@ flow_svg = f"""<figure class="flow">
 <text x="510" y="350" text-anchor="middle" class="f-s">{F['ready_author_closed']} by the contributor</text><text x="510" y="370" text-anchor="middle" class="f-s">{F['rejected']} by a maintainer</text></g>
 <g class="f-bad"><rect x="610" y="300" width="380" height="160" rx="10"/><text x="800" y="326" text-anchor="middle" class="f-t">Closed by the stale bot after ready: {F['auto_closed'] - F['auto_never_ready']}</text>
 <text x="800" y="350" text-anchor="middle" class="f-s">{F['auto_ready_no_human']} never got a maintainer reply</text>
-<text x="800" y="372" text-anchor="middle" class="f-s">{F['auto_reviewed']} got one before the stale bot closed them:</text>
+<text x="800" y="372" text-anchor="middle" class="f-s">{F['auto_reviewed']} had a maintainer reply before closing:</text>
 <text x="800" y="394" text-anchor="middle" class="f-s">{F['auto_reviewed_replied_then_stopped']} had responded; a reviewer commented last</text>
 <text x="800" y="414" text-anchor="middle" class="f-s">({F['replied_before_first_human']} of them last acted before a maintainer replied)</text>
 <text x="800" y="436" text-anchor="middle" class="f-s">{F['auto_reviewed_never_replied']} never responded · {F['auto_reviewed_waiting_on_reviewer']} were waiting on a reviewer</text></g>
@@ -229,7 +231,7 @@ flow_svg = f"""<figure class="flow">
 </figure>"""
 
 unshipped_html = "".join(
-    f'<article class="un"><div class="un-head"><h3>{e(u["name"])}</h3><a class="un-pr" href="https://github.com/raycast/extensions/pull/{u["number"]}">#{u["number"]}</a></div>'
+    f'<article class="un"><div class="un-head"><h3><img class="un-ic" src="{UICON[u["number"]]}" alt="">{e(u["name"])}</h3><a class="un-pr" href="https://github.com/raycast/extensions/pull/{u["number"]}">#{u["number"]}</a></div>'
     f'<div class="un-meta">{e(u["opened"])} · {e(u["outcome"])}</div><p>{e(u["what"])}</p><p class="dim">{e(u["story"])}</p></article>'
     for u in UNSHIPPED)
 
@@ -240,7 +242,7 @@ contrib_rows = "".join(
 
 CK = N_["checklist"]
 checklist_html = (
-    f'<div class="cols"><div class="callout"><h3>Today</h3><ul class="ck">{"".join(f"<li>{e(x)}</li>" for x in CK["current"])}</ul>'
+    f'<p class="dim lead">{CK["intro"]}</p><div class="cols"><div class="callout"><h3>Today</h3><ul class="ck">{"".join(f"<li>{e(x)}</li>" for x in CK["current"])}</ul>'
     f'<p class="dim">{e(CK["critique"])}</p></div>'
     f'<div class="callout"><h3>Proposed</h3><ul class="ck">{"".join(f"<li>{x}</li>" for x in CK["proposed"])}</ul>'
     f'<p class="dim">{e(CK["automated"])}</p></div></div>')
@@ -278,10 +280,10 @@ a:hover {{ text-decoration-color: var(--accent); }}
 a:focus-visible, button:focus-visible, summary:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }}
 code {{ font: 12.5px var(--mono); color: var(--fg-3); }}
 .hero {{ display: grid; gap: 22px; justify-items: center; text-align: center; padding-top: 24px; }}
-.pill {{ font: 500 12px var(--mono); color: var(--fg-2); border: 1px solid var(--line); background: rgba(255,255,255,.03);
+.pill {{ font: 500 12px var(--mono); text-transform: uppercase; color: var(--fg-2); border: 1px solid var(--line); background: rgba(255,255,255,.03);
   border-radius: 999px; padding: 5px 14px; letter-spacing: .3px; }}
 .pill b {{ color: var(--accent); font-weight: 500; }}
-h1 {{ margin: 0; padding-bottom: .12em; font: 600 clamp(36px, 7vw, 64px)/1.18 var(--sans); letter-spacing: -1.5px; text-wrap: balance; max-width: 16ch;
+h1 {{ margin: 0; padding-bottom: .12em; font: 600 clamp(36px, 7vw, 64px)/1.18 var(--sans); letter-spacing: -1.5px; text-wrap: balance; max-width: 20ch;
   background: linear-gradient(180deg, #fff 30%, #9c9c9d); -webkit-background-clip: text; background-clip: text; color: transparent; }}
 .lede {{ margin: 0; max-width: 62ch; color: var(--fg-3); font-size: 17px; line-height: 1.7; text-wrap: pretty; }}
 .byline {{ font: 12px var(--mono); color: var(--fg-4); }}
@@ -319,6 +321,9 @@ h3 {{ margin: 0; font: 600 17px/1.3 var(--sans); letter-spacing: -.2px; }}
 .prose {{ display: grid; gap: 14px; max-width: 68ch; color: var(--fg-2); }}
 .prose p {{ margin: 0; }}
 .prose strong {{ color: var(--fg); font-weight: 600; }}
+.defs {{ margin: 0; display: grid; gap: 12px; }}
+.defs dt {{ color: var(--fg); font-weight: 600; }}
+.defs dd {{ margin: 2px 0 0; }}
 .prose ul {{ margin: 0; padding-left: 20px; display: grid; gap: 8px; }}
 .chart {{ margin: 0; background: linear-gradient(180deg, var(--raised), var(--surface)); border: 1px solid var(--line);
   border-radius: 16px; padding: 22px; display: grid; gap: 14px; min-width: 0; }}
@@ -390,7 +395,9 @@ a.ev-l {{ text-decoration-color: var(--line); }}
   padding: 18px 20px; display: grid; gap: 8px; align-content: start; }}
 .un p {{ margin: 0; font-size: 14px; color: var(--fg-2); }}
 .un p.dim {{ color: var(--fg-3); font-size: 13.5px; }}
-.un-head {{ display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }}
+.un-head h3 {{ display: flex; align-items: center; gap: 10px; }}
+.un-ic {{ width: 28px; height: 28px; border-radius: 7px; flex: none; }}
+.un-head {{ display: flex; justify-content: space-between; align-items: center; gap: 10px; }}
 .un-pr {{ font: 12px var(--mono); }}
 .un-meta {{ font: 12px var(--mono); color: var(--fg-4); }}
 ul.ck {{ list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }}
@@ -425,7 +432,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 <div class="glow" aria-hidden="true"></div>
 <main>
 <header class="hero">
-  <span class="pill">raycast/extensions · {e(N['window'])} · data as of <b>{collected}</b></span>
+  <span class="pill">{e(N['window'])} · data as of <b>{collected}</b></span>
   <h1>{e(N['title'])}</h1>
   {''.join(f'<p class="lede">{para}</p>' for para in N['lede'].split(chr(10) * 2))}
   <span class="byline">Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span>
@@ -470,7 +477,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 {section("velocity", "Velocity", N["velocity"]["title"], ic="clock", body=
          f'<div class="prose">{N["velocity"]["body"]}</div>'
          + chart_block("velocity", "Days to merge and to first human reply (median)", "New extensions are measured from when the PR was marked ready for review. For new extensions the first reply is a maintainer's; for existing extensions, a maintainer's or the extension owner's. Medians cover PRs that got a reply.")
-         + chart_block("nohuman21", "Ready new submissions with no maintainer reply within 21 days", "Includes PRs that never got one: closed PRs, plus open ones ready for at least 21 days. 21 days is the stale bot's clock for most of the window.", 260))}
+         + chart_block("nohuman21", "Ready new submissions with no maintainer reply within 21 days", "Includes PRs that never got a reply: closed PRs, plus open ones ready for at least 21 days. 21 days is the stale bot's clock for most of the window.", 260))}
 
 {section("greptile", "Greptile", N["greptile"]["title"],
          f'<div class="prose">{N["greptile"]["body"]}</div><div class="grid2">'
@@ -613,7 +620,7 @@ function build(cid, cfg) {{
               ticks: {{ maxRotation: 0, autoSkip: !isBar, autoSkipPadding: 18, color: tok("--fg-4"),
                         callback(v) {{ const m = this.chart.data.labels[v]; return isBar || m.endsWith("-01") || this.chart.data.labels.length < 16 ? m : m.slice(5); }} }} }},
         y: {{ beginAtZero: true, grid: {{ color: tok("--line-soft") }}, border: {{ display: false }},
-              ticks: {{ color: tok("--fg-4"), callback: v => unit === "%" ? v + "%" : v }} }},
+              ticks: {{ color: tok("--fg-4"), callback: (v, i) => i % (cfg.yEvery || 1) ? "" : unit === "%" ? v + "%" : v }} }},
       }},
       plugins: {{
         legend: {{ display: false }},
