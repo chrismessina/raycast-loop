@@ -1,7 +1,7 @@
 {
   "window": "Jan 2024 – Oct 2026",
   "title": "Where new extensions get lost",
-  "lede": "PRs to the Raycast Store more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most get a human review, go through a round of fixes, get more feedback, and stop. Others sit as drafts nobody was asked to review, or wait weeks for one of the two people who review them. This report follows that loop (open a PR, get feedback, revise, get reviewed again) and shows where contributors drop out of it.",
+  "lede": "PRs to the <a href=\"https://www.raycast.com/store\">Raycast Store</a> more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most get a human review, go through a round of fixes, get more feedback, and stop. Others sit as drafts nobody was asked to review, or wait weeks for one of the two people who review them.\n\nThis report follows that loop (open a PR, get feedback, revise, get reviewed again) and shows where contributors drop out of it.",
   "headline_numbers": [
     [
       "2.1×",

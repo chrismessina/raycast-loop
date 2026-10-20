@@ -387,7 +387,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 <header class="hero">
   <span class="pill">raycast/extensions · {e(N['window'])} · data as of <b>{collected}</b></span>
   <h1>{e(N['title'])}</h1>
-  <p class="lede">{N['lede']}</p>
+  {''.join(f'<p class="lede">{para}</p>' for para in N['lede'].split(chr(10) * 2))}
   <span class="byline">Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span>
   <div class="stats">{''.join(f'<div class="stat"><b>{e(a)}</b><span>{e(b)}</span></div>' for a, b in H)}</div>
 </header>
