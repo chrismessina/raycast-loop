@@ -92,8 +92,23 @@ top_rows = "".join(
     f"{e(title_of.get(x) or x)}</a> <code>{e(x)}</code></td><td class='num'>{tot[x]}</td>"
     f"<td class='num'>{sum(by_ext[x][m] for m in act_months[-3:])}</td></tr>" for i, x in enumerate(top))
 
-# ---- headline numbers
-H = NARR["headline_numbers"]
+# ---- headline numbers, in pricing-table columns; each icon also marks its section below
+_I = {
+    "volume": '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+    "draft": '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M18 6V5"/><path d="M18 11v-1"/><path d="M6 9v12"/>',
+    "merged": '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>',
+    "closed": '<circle cx="6" cy="6" r="3"/><path d="M6 9v12"/><path d="m21 3-6 6"/><path d="m21 9-6-6"/><path d="M18 11.5V15"/><circle cx="18" cy="18" r="3"/>',
+    "clock": '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    "reply": '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    "rules": '<path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/>',
+}
+icon = lambda k, size=18: (f'<svg class="ic" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                           f'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{_I[k]}</svg>')
+stats_html = "".join(
+    f'<div class="tier{" featured" if c.get("featured") else ""}"><div class="tier-head"><h3>{e(c["title"])}</h3><p>{e(c["sub"])}</p></div>'
+    + "".join(f'<div class="hs"><span class="hs-ic">{icon(it["icon"], 20)}</span><div><div class="hs-line"><b>{e(it["n"])}</b>'
+              f'<span>{e(it["noun"])}</span></div><p>{e(it["detail"])}</p></div></div>' for it in c["items"]) + '</div>'
+    for c in NARR["headline_numbers"])
 
 # ---- stale clock table
 clock_rows = "".join(f"<tr><td>{e(a)}</td><td>{e(b)}</td><td class='num'>{e(c)}</td></tr>" for a, b, c in NARR["clock_table"])
@@ -109,17 +124,17 @@ dup_rows = "".join(
     f"<td>{e(d['verdict'])}</td><td class='dim'>{e(d['note'])}</td></tr>" for d in DUPCHECK)
 
 
-def chart_block(cid, title, sub, height=320):
+def chart_block(cid, title, sub, height=320, ic=None):
     return f"""<figure class="chart" id="fig-{cid}">
-  <figcaption><h3>{e(title)}</h3><p>{sub}</p></figcaption>
+  <figcaption><h3>{icon(ic, 16) if ic else ""}{e(title)}</h3><p>{sub}</p></figcaption>
   <div class="toggles" data-for="{cid}" role="group" aria-label="Series"></div>
   <div class="canvas-wrap" style="height:{height}px"><canvas id="c-{cid}" role="img" aria-label="{e(title)}"></canvas></div>
   <details class="tablev"><summary>Show as table</summary><div class="tscroll" data-table="{cid}"></div></details>
 </figure>"""
 
 
-def section(sid, eyebrow, title, body):
-    return f'<section id="{sid}"><div class="sec-head"><span class="eyebrow">{eyebrow}</span><h2>{e(title)}</h2></div>{body}</section>'
+def section(sid, eyebrow, title, body, ic=None):
+    return f'<section id="{sid}"><div class="sec-head"><span class="eyebrow">{icon(ic, 14) if ic else ""}{eyebrow}</span><h2>{e(title)}</h2></div>{body}</section>'
 
 
 N = NARR
@@ -233,7 +248,11 @@ checklist_html = (
 payload = json.dumps({"months": months, "provisional_from": provisional_from, "charts": charts,
                       "events": EV, "icons": ICONS}, separators=(",", ":"))
 
-page = f"""<title>The Raycast Loop</title>
+page = f"""<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Raycast Loop</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
@@ -266,11 +285,32 @@ h1 {{ margin: 0; padding-bottom: .12em; font: 600 clamp(36px, 7vw, 64px)/1.18 va
   background: linear-gradient(180deg, #fff 30%, #9c9c9d); -webkit-background-clip: text; background-clip: text; color: transparent; }}
 .lede {{ margin: 0; max-width: 62ch; color: var(--fg-3); font-size: 17px; line-height: 1.7; text-wrap: pretty; }}
 .byline {{ font: 12px var(--mono); color: var(--fg-4); }}
-.stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 1px; width: 100%; margin-top: 18px;
-  background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }}
-.stat {{ background: var(--surface); padding: 22px 22px 20px; display: grid; gap: 6px; text-align: left; align-content: start; }}
-.stat b {{ font: 600 34px/1 var(--sans); letter-spacing: -1px; font-variant-numeric: tabular-nums; }}
-.stat span {{ color: var(--fg-3); font-size: 13.5px; line-height: 1.45; }}
+.tiers {{ display: grid; grid-template-columns: 1fr 1.12fr 1fr; align-items: stretch; padding-block: 28px; width: 100%; margin-top: 18px; text-align: left; }}
+.tier {{ background: var(--surface); border: 1px solid var(--line); padding: 26px 24px; display: grid; gap: 22px; align-content: start; }}
+.tier:first-child {{ border-radius: 16px 0 0 16px; border-right: 0; }}
+.tier:last-child {{ border-radius: 0 16px 16px 0; border-left: 0; }}
+.tier.featured {{ background: linear-gradient(180deg, #17181b, var(--raised)); border-color: #2e3133; border-radius: 16px;
+  margin-block: -28px; padding: 34px 28px; box-shadow: 0 24px 60px rgba(0,0,0,.45); position: relative; z-index: 1; }}
+.tier-head {{ display: grid; gap: 4px; }}
+.tier-head h3 {{ font-size: 19px; }}
+.tier-head p {{ margin: 0; color: var(--fg-3); font-size: 14px; }}
+.hs {{ display: grid; grid-template-columns: 22px 1fr; gap: 12px; }}
+.hs-ic {{ color: var(--fg-3); padding-top: 7px; }}
+.featured .hs-ic {{ color: var(--accent); }}
+.hs-line {{ display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 9px; }}
+.hs-line b {{ font: 600 30px/1.15 var(--sans); letter-spacing: -1px; font-variant-numeric: tabular-nums; }}
+.featured .hs-line b {{ font-size: 36px; }}
+.hs-line span {{ font: 600 17px/1.3 var(--sans); color: var(--fg-2); letter-spacing: -.3px; }}
+.hs p {{ margin: 4px 0 0; color: var(--fg-3); font-size: 13.5px; line-height: 1.45; }}
+@media (max-width: 860px) {{
+  .tiers {{ grid-template-columns: 1fr; gap: 12px; }}
+  .tier, .tier:first-child, .tier:last-child {{ border: 1px solid var(--line); border-radius: 16px; }}
+  .tiers {{ padding-block: 0; }}
+  .tier.featured {{ order: -1; margin-block: 0; padding: 26px 24px; }}
+}}
+.ic {{ flex: none; vertical-align: -3px; }}
+.eyebrow .ic {{ margin-right: 7px; vertical-align: -2px; }}
+.chart h3 .ic {{ margin-right: 8px; color: var(--fg-3); }}
 section {{ display: grid; gap: 28px; min-width: 0; }}
 .sec-head {{ display: grid; gap: 10px; }}
 .eyebrow {{ font: 500 12px var(--mono); letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }}
@@ -389,7 +429,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
   <h1>{e(N['title'])}</h1>
   {''.join(f'<p class="lede">{para}</p>' for para in N['lede'].split(chr(10) * 2))}
   <span class="byline">Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span>
-  <div class="stats">{''.join(f'<div class="stat"><b>{e(a)}</b><span>{e(b)}</span></div>' for a, b in H)}</div>
+  <div class="tiers">{stats_html}</div>
 </header>
 
 <section id="recommendations"><div class="sec-head"><span class="eyebrow">What to change</span><h2>{e(N["recommendations"]["title"])}</h2></div>
@@ -411,23 +451,23 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
 <span class="prov">Months from {provisional_from} on are provisional: those PRs haven't been open long enough to be stale-closed.</span>
 </section>
 
-{section("volume", "Volume", N["volume"]["title"],
+{section("volume", "Volume", N["volume"]["title"], ic="volume", body=
          f'<div class="prose">{N["volume"]["body"]}</div>' + chart_block("volume", "PRs opened per month", "Human-authored PRs by type, by month opened."))}
 
-{section("outcomes", "Outcomes", N["outcomes"]["title"],
+{section("outcomes", "Outcomes", N["outcomes"]["title"], ic="merged", body=
          f'<div class="prose">{N["outcomes"]["body"]}</div>'
          + chart_block("outcomes", "How PRs opened each month ended", "Counts by month opened. Resubmitted new-extension PRs are counted once, under the final PR. Click a series to hide it.", 360)
          + chart_block("rates", "Merge and auto-close rates", "Share of submissions opened that month, new vs. existing extensions."))}
 
-{section("drafts", "Why they close", N["drafts"]["title"],
+{section("drafts", "Why they close", N["drafts"]["title"], ic="closed", body=
          f'<div class="prose">{N["drafts"]["body"]}</div>' + flow_svg
-         + chart_block("drafts", "Drafts", "Share of all PRs opened as drafts; share of new submissions never marked ready; share of auto-closed new submissions never marked ready.")
+         + chart_block("drafts", "Drafts", "Share of all PRs opened as drafts; share of new submissions never marked ready; share of auto-closed new submissions never marked ready.", ic="draft")
          + chart_block("autoclose_state", "Auto-closed new submissions, by what happened first", "Never-ready PRs were never in a reviewer's queue. The rest were."))}
 
 {section("unshipped", "What didn't ship", N["unshipped"]["title"],
          f'<div class="prose">{N["unshipped"]["body"]}</div><div class="uns">{unshipped_html}</div>')}
 
-{section("velocity", "Velocity", N["velocity"]["title"],
+{section("velocity", "Velocity", N["velocity"]["title"], ic="clock", body=
          f'<div class="prose">{N["velocity"]["body"]}</div>'
          + chart_block("velocity", "Days to merge and to first human reply (median)", "New extensions are measured from when the PR was marked ready for review. First human reply means a Raycast maintainer or the extension's owner. Medians cover PRs that got a reply.")
          + chart_block("nohuman21", "Ready new submissions with no human reply within 21 days", "Includes PRs that never got one: closed PRs, plus open ones ready for at least 21 days. 21 days is the stale bot's clock for most of the window.", 260))}
@@ -438,12 +478,12 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
          + chart_block("greptile_score", "Confidence score", "Mean of Greptile's first confidence score per PR, from mid-2025 when it started publishing one.", 220)
          + '</div>')}
 
-{section("friction", "Friction", N["friction"]["title"],
+{section("friction", "Friction", N["friction"]["title"], ic="reply", body=
          f'<div class="prose">{N["friction"]["body"]}</div>'
          + chart_block("feedback_src", "Where feedback comes from", "Share of submissions that got feedback from each source before closing.")
          + chart_block("dropout", "Dropout after feedback", "Of submissions that got feedback, the share that closed unmerged, and the share that closed unmerged with no reply from the author."))}
 
-{section("themes", "What Greptile flags", N["themes"]["title"],
+{section("themes", "What Greptile flags", N["themes"]["title"], ic="rules", body=
          f'<div class="prose">{N["themes"]["body"]}</div>'
          + (f'<div class="scroll"><table><thead><tr><th>Theme</th><th class="num">Findings</th><th class="num">PRs</th><th>In public rubric</th><th>Example</th></tr></thead><tbody>{themes_rows}</tbody></table></div>' if THEMES else ''))}
 

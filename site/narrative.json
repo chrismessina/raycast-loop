@@ -3,30 +3,67 @@
   "title": "Where new extensions get lost",
   "lede": "PRs to the <a href=\"https://www.raycast.com/store\">Raycast Store</a> more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most get a human review, go through a round of fixes, get more feedback, and stop. Others sit as drafts nobody was asked to review, or wait weeks for one of the two people who review them.\n\nThis report follows that loop (open a PR, get feedback, revise, get reviewed again) and shows where contributors drop out of it.",
   "headline_numbers": [
-    [
-      "2.1×",
-      "PRs per quarter: 899 on average in 2024, 1,924 in the first three quarters of 2026"
-    ],
-    [
-      "57% → 37%",
-      "new-extension submissions merged, 2024-Q1 vs. 2026-Q1"
-    ],
-    [
-      "16% → 43%",
-      "new-extension submissions auto-closed by the stale bot, 2024-Q1 vs. 2026-Q2"
-    ],
-    [
-      "~2 in 3",
-      "auto-closed new submissions in 2026 had a human reply first; most authors had answered earlier feedback"
-    ],
-    [
-      "4.8 → 22 days",
-      "median wait from ready-for-review to first human reply on a new extension, 2024-Q1 vs. 2026-Q2"
-    ],
-    [
-      "27%",
-      "of Greptile's findings fall in mechanical categories a local script could check"
-    ]
+    {
+      "title": "The queue",
+      "sub": "More PRs, and more of them drafts.",
+      "items": [
+        {
+          "icon": "volume",
+          "n": "2.1×",
+          "noun": "more PRs",
+          "detail": "899 a quarter on average in 2024; 1,924 in the first three quarters of 2026"
+        },
+        {
+          "icon": "draft",
+          "n": "1 in 6",
+          "noun": "never marked ready",
+          "detail": "new submissions in 2026-H1 that stayed drafts, so no reviewer was asked to look (267 of 1,529)"
+        }
+      ]
+    },
+    {
+      "title": "New extensions",
+      "sub": "Fewer merge, more time out, and the wait is longer.",
+      "featured": true,
+      "items": [
+        {
+          "icon": "merged",
+          "n": "37%",
+          "noun": "merged",
+          "detail": "of new-extension submissions in 2026-Q1, down from 57% in 2024-Q1"
+        },
+        {
+          "icon": "closed",
+          "n": "43%",
+          "noun": "auto-closed",
+          "detail": "by the stale bot in 2026-Q2, up from 16% in 2024-Q1"
+        },
+        {
+          "icon": "clock",
+          "n": "22 days",
+          "noun": "to a human reply",
+          "detail": "median wait after ready for review in 2026-Q2; 4.8 days in 2024-Q1"
+        }
+      ]
+    },
+    {
+      "title": "Review",
+      "sub": "Where the rounds go.",
+      "items": [
+        {
+          "icon": "reply",
+          "n": "2 in 3",
+          "noun": "got a human reply",
+          "detail": "of auto-closed new submissions in 2026, before closing; most authors had answered earlier feedback"
+        },
+        {
+          "icon": "rules",
+          "n": "27%",
+          "noun": "mechanical",
+          "detail": "of Greptile's findings fall in categories a local script could check"
+        }
+      ]
+    }
   ],
   "volume": {
     "title": "Twice the PRs, more than twice the new extensions",
