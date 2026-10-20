@@ -1,7 +1,7 @@
 {
   "window": "Jan 2024 – Oct 2026",
   "title": "How Raycast's Review Loop Leaks Extensions",
-  "lede": "PRs to the <a href=\"https://www.raycast.com/store\">Raycast Store</a> more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most contributors respond to the first review comments, often Greptile's, then stop after the next round of review. Others sit as drafts that were never marked ready, or wait weeks for one of the two maintainers who review them.\n\nThis report follows that loop (open a PR, get review comments, push fixes, get re-reviewed) and shows where contributors drop out of it.",
+  "lede": "PRs to the <a href=\"https://www.raycast.com/store\">Raycast Store</a> more than doubled between 2024 and 2026, the same period coding agents went mainstream. PRs to existing extensions still merge quickly. New extensions increasingly stall: most contributors respond to the first review comments, often Greptile's, then stop after the next round of review. Others sit as drafts that were never marked ready, or wait weeks for one of the two maintainers who review them.\n\nThis report follows that loop (open a PR, get review comments, push fixes, get re-reviewed) and shows where contributors drop out of it. As an <a href=\"https://www.chrismessina.me/raycast/\">author of 18 original extensions and contributor to 23 others</a>, I have substantial first-hand knowledge of this loop.",
   "headline_numbers": [
     {
       "title": "The queue",
