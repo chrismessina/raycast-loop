@@ -152,7 +152,7 @@
     ]
   ],
   "recommendations": {
-    "title": "Five changes, ordered by reach for the cost",
+    "title": "Five changes to make, ordered by cost-benefit ratio",
     "intro": "Each is sized against 2026-H1, when 1,529 new-extension submissions were opened and 572 merged.",
     "items": [
       {
@@ -161,6 +161,13 @@
         "cost": "Low",
         "what": "Move Greptile's custom rules into a <code>.greptile/</code> folder in raycast/extensions, <a href=\"https://www.greptile.com/docs/code-review/custom-standards#method-2-greptile/-folder-recommended\">Greptile's recommended setup</a>: version-controlled, reviewed in PRs, readable by contributors and their agents. Ship the deterministic rules as a local check.",
         "tradeoff": "The rules become public, so people can write to them; rule changes go through PR review, which adds process and an audit trail."
+      },
+      {
+        "title": "Replace the PR checklist with checks",
+        "reach": "Every PR",
+        "cost": "Low",
+        "what": "The five checkboxes are self-attestations. Two are file checks a script can verify, and the build half of a third is already run by CI. Move those to CI and keep what only a person knows: a Store search, a promise to mark ready, testing the build in Raycast, which platforms they tested on (macOS, Windows, or both), a screencast, and whether they can respond to review. If the author couldn't test on one platform, a <code>needs Windows tester</code> (or macOS) label asks a volunteer to try it there.",
+        "tradeoff": "CI checks need upkeep; the checkboxes cost nothing to maintain, but nothing enforces them."
       },
       {
         "title": "Make the draft step impossible to miss",
@@ -182,13 +189,6 @@
         "cost": "Medium",
         "what": "Raycast is the gate, so time spent waiting on a reviewer shouldn't count against the author. When review slows (a reviewer is away, the queue spikes), contributors are auto-closed for inactivity that isn't theirs. In 272 of these 368 the author had answered earlier feedback and a reviewer spoke last; in 185 of those, the author's last action came before the first human reply. They answered Greptile, waited, and didn't come back after the human review. Apply an <code>awaiting review</code> label when the author pushes after feedback, exempt it from the stale bot, and restart the clock when a reviewer replies. Pair it with a complete checklist in the first human review, so it's the last round.",
         "tradeoff": "Paused PRs can pile up in the queue. A clock that always runs makes authors shepherd their work forward; pausing only while the PR is waiting on Raycast keeps that pressure on the author's turns."
-      },
-      {
-        "title": "Replace the PR checklist with checks",
-        "reach": "Every PR",
-        "cost": "Low",
-        "what": "The five checkboxes are self-attestations. Two are file checks a script can verify, and the build half of a third is already run by CI. Move those to CI and keep what only a person knows: a Store search, a promise to mark ready, testing the build in Raycast, which platforms they tested on (macOS, Windows, or both), a screencast, and whether they can respond to review. If the author couldn't test on one platform, a <code>needs Windows tester</code> (or macOS) label asks a volunteer to try it there.",
-        "tradeoff": "CI checks need upkeep; the checkboxes cost nothing to maintain, but nothing enforces them."
       }
     ]
   },
