@@ -436,6 +436,7 @@ footer {{ color: var(--fg-4); font-size: 13px; display: grid; gap: 6px; border-t
   <h1>{e(N['title'])}</h1>
   {''.join(f'<p class="lede">{para}</p>' for para in N['lede'].split(chr(10) * 2))}
   <span class="byline">Independent analysis by <a href="https://chrismessina.me">Chris Messina</a>. Not affiliated with or endorsed by Raycast.</span>
+  <span class="byline">Leave your feedback on <a href="https://www.reddit.com/r/raycastapp/s/7ue4JqsIFG">Reddit</a> or <a href="https://raycastcommunity.slack.com/archives/C02HEMAF2SJ/p1792460312008959">Slack</a>.</span>
   <div class="tiers">{stats_html}</div>
 </header>
 
